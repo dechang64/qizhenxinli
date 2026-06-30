@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>大观园树洞</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--ink:#2c1810;--paper:#f5f0e8;--paper2:#e8dfd0;--red:#c0392b;--gold:#b8860b;--jade:#2d6a4f;--muted:#8b7355;--shadow:rgba(44,24,16,.08)}
+html,body{height:100%;overflow:hidden}
+body{font-family:'PingFang SC','Hiragino Sans GB','Microsoft YaHei',serif;background:var(--paper);color:var(--ink);font-size:15px;line-height:1.6}
+
+/* ── App Shell ── */
+#app{height:100%;display:flex;flex-direction:column;max-width:480px;margin:0 auto;position:relative}
+.page{display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:70px}
+.page.active{display:block}
+
+/* ── Hero ── */
+.hero{background:linear-gradient(135deg,#2c1810,#4a2c1a 50%,#3d1f0e);padding:2.5rem 1.5rem 2rem;color:#f5f0e8;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(184,134,11,.12),transparent 60%)}
+.hero h1{font-size:1.8rem;font-weight:700;letter-spacing:.4rem;position:relative}
+.hero .sub{opacity:.7;font-size:.85rem;margin:.4rem 0 .8rem;position:relative}
+.hero .motto{font-size:.8rem;opacity:.5;font-style:italic;position:relative}
+
+/* ── Safety Badge ── */
+.badge{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .7rem;background:rgba(45,106,79,.06);color:var(--jade);border-radius:99px;font-size:.7rem;font-weight:600;margin:.8rem auto}
+
+/* ── Cards ── */
+.card{background:#fff;border-radius:12px;padding:1.2rem;margin:.6rem .8rem;box-shadow:0 1px 6px var(--shadow);border:1px solid rgba(0,0,0,.04)}
+.card h3{font-size:1rem;margin-bottom:.4rem}
+.card p{font-size:.82rem;color:var(--muted);line-height:1.7}
+
+/* ── Scene Cards ── */
+.scene-card{background:#fff;border-radius:12px;padding:1rem;margin:.5rem .8rem;box-shadow:0 1px 6px var(--shadow);border:1px solid rgba(0,0,0,.04);cursor:pointer;transition:transform .15s}
+.scene-card:active{transform:scale(.98)}
+.scene-icon{font-size:1.8rem;text-align:center;margin-bottom:.3rem}
+.scene-name{font-size:1rem;font-weight:600;text-align:center}
+.scene-desc{font-size:.78rem;color:var(--muted);text-align:center;margin:.2rem 0}
+.scene-mood{font-size:.72rem;color:var(--red);text-align:center;background:rgba(192,57,43,.05);padding:.15rem .5rem;border-radius:99px;display:inline-block}
+.scene-theory{font-size:.68rem;color:var(--gold);text-align:center;margin-top:.3rem}
+.scene-char{font-size:.7rem;color:var(--muted);text-align:center;margin-top:.2rem}
+
+/* ── Buttons ── */
+.btn{display:block;width:calc(100% - 1.6rem);margin:.5rem .8rem;padding:.8rem;border:none;border-radius:10px;font-size:.9rem;font-weight:600;cursor:pointer;text-align:center;transition:opacity .15s}
+.btn:active{opacity:.7}
+.btn-primary{background:linear-gradient(135deg,var(--red),#a93226);color:#fff}
+.btn-secondary{background:var(--paper2);color:var(--ink)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#d4a017);color:#fff}
+.btn-outline{background:transparent;border:1.5px solid var(--gold);color:var(--gold)}
+.btn-sm{width:auto;display:inline-block;padding:.5rem 1rem;margin:.3rem;font-size:.8rem;border-radius:99px}
+
+/* ── MBTI Test ── */
+.progress-bar{height:4px;background:var(--paper2);border-radius:99px;margin:.8rem;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:99px;transition:width .3s}
+.q-card{text-align:center;padding:1.5rem 1rem;margin:1rem .8rem}
+.q-num{font-size:.75rem;color:var(--gold);margin-bottom:.5rem}
+.q-text{font-size:1.05rem;font-weight:600;margin-bottom:1.2rem;line-height:1.6}
+.q-options{display:flex;flex-direction:column;gap:.6rem}
+.q-opt{padding:.8rem 1rem;background:#fff;border:1.5px solid var(--paper2);border-radius:10px;font-size:.88rem;cursor:pointer;text-align:center;transition:all .15s}
+.q-opt:active{background:var(--paper2);border-color:var(--gold)}
+
+/* ── Result Card ── */
+.result-type{font-size:2.2rem;font-weight:700;color:var(--red);letter-spacing:.3rem;text-align:center;padding:.5rem 0}
+.result-desc{font-size:.85rem;color:var(--gold);text-align:center;margin-bottom:.5rem}
+.result-scene{text-align:center;padding:1rem;background:rgba(192,57,43,.04);border-radius:10px;margin:.8rem}
+.result-scene .icon{font-size:2rem}
+.result-scene .name{font-size:1.1rem;font-weight:600;margin:.3rem 0}
+.result-scene .info{font-size:.78rem;color:var(--muted)}
+.result-reason{background:rgba(192,57,43,.04);border-radius:10px;padding:1rem;margin:.8rem;font-size:.85rem;line-height:1.8}
+.result-quote{text-align:center;padding:.8rem;background:var(--paper2);border-radius:10px;margin:.8rem;font-style:italic;font-size:.9rem}
+.dim-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin:.8rem 0}
+.dim-item{text-align:center;padding:.6rem .3rem;background:#fff;border-radius:8px;border:1px solid var(--paper2)}
+.dim-item .letter{font-size:1.1rem;font-weight:700;color:var(--red)}
+.dim-item .label{font-size:.65rem;color:var(--muted);margin-top:.1rem}
+.dim-item .desc{font-size:.6rem;color:var(--ink);margin-top:.2rem}
+
+/* ── Chat ── */
+.chat-area{flex:1;overflow-y:auto;padding:.8rem;display:flex;flex-direction:column;gap:.6rem}
+.chat-bubble{max-width:80%;padding:.7rem 1rem;border-radius:12px;font-size:.88rem;line-height:1.7;animation:fadeIn .3s;word-break:break-word;overflow-wrap:break-word}
+.chat-bubble.user{align-self:flex-end;background:linear-gradient(135deg,var(--red),#a93226);color:#fff;border-bottom-right-radius:4px}
+.chat-bubble.ai{align-self:flex-start;background:#fff;color:var(--ink);border:1px solid var(--paper2);border-bottom-left-radius:4px}
+.chat-bubble .name{font-size:.7rem;color:var(--gold);margin-bottom:.2rem;font-weight:600}
+.chat-input-bar{display:none;gap:.4rem;padding:.5rem .8rem;background:#fff;border-top:1px solid var(--paper2);position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;z-index:100}
+.page-chat-active .chat-input-bar{display:flex}
+.chat-input-bar input{flex:1;padding:.6rem .8rem;border:1.5px solid var(--paper2);border-radius:99px;font-size:.88rem;outline:none;background:var(--paper)}
+.chat-input-bar input:focus{border-color:var(--gold)}
+.chat-input-bar button{width:36px;height:36px;border-radius:50%;border:none;background:var(--red);color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* ── Treehole ── */
+.treehole-box{padding:1.5rem 1rem;text-align:center}
+.treehole-box textarea{width:100%;height:120px;padding:.8rem;border:1.5px solid var(--paper2);border-radius:12px;font-size:.9rem;resize:none;outline:none;background:#fff;font-family:inherit;line-height:1.7}
+.treehole-box textarea:focus{border-color:var(--gold)}
+.release-options{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin:.8rem 0}
+.release-opt{padding:.6rem;background:#fff;border:1.5px solid var(--paper2);border-radius:10px;text-align:center;cursor:pointer;font-size:.82rem;transition:all .15s}
+.release-opt:active{border-color:var(--gold);background:rgba(184,134,11,.05)}
+.release-opt .icon{font-size:1.3rem;display:block;margin-bottom:.2rem}
+
+/* ── Social ── */
+.post-card{background:#fff;border-radius:12px;padding:1rem;margin:.5rem .8rem;box-shadow:0 1px 6px var(--shadow)}
+.post-header{display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem}
+.post-mood{font-size:1.1rem}
+.post-tag{font-size:.7rem;color:var(--gold);background:rgba(192,57,43,.05);padding:.1rem .4rem;border-radius:99px}
+.post-time{font-size:.68rem;color:var(--muted);margin-left:auto}
+.post-content{font-size:.88rem;line-height:1.8;margin-bottom:.5rem}
+.post-actions{display:flex;gap:1.2rem;font-size:.78rem;color:var(--muted)}
+
+/* ── Zodiac ── */
+.zodiac-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;padding:0 .8rem}
+.zodiac-btn{padding:.6rem;background:#fff;border:1.5px solid var(--paper2);border-radius:10px;text-align:center;cursor:pointer;font-size:.85rem;transition:all .15s}
+.zodiac-btn:active{border-color:var(--gold)}
+.zodiac-btn .icon{font-size:1.2rem;display:block}
+.zodiac-btn .trait{font-size:.65rem;color:var(--muted);margin-top:.1rem}
+.elem-label{font-size:.8rem;font-weight:600;padding:.8rem .8rem .3rem}
+
+/* ── Music ── */
+.music-item{display:flex;align-items:center;gap:.8rem;padding:.8rem;background:#fff;border-radius:10px;margin:.4rem .8rem;cursor:pointer}
+.music-item:active{background:var(--paper2)}
+.music-icon{font-size:1.5rem;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--paper2);border-radius:50%}
+.music-info{flex:1}
+.music-title{font-size:.88rem;font-weight:600}
+.music-desc{font-size:.72rem;color:var(--muted)}
+.music-play{font-size:1.2rem;color:var(--red)}
+
+/* ── Theory ── */
+.theory-card{border-left:3px solid var(--gold);padding:1rem;margin:.6rem .8rem;background:#fff;border-radius:0 10px 10px 0}
+.theory-card h4{font-size:.9rem;margin-bottom:.3rem}
+.theory-card .author{font-size:.72rem;color:var(--muted);margin-bottom:.5rem}
+.theory-card .core{font-size:.82rem;line-height:1.7;margin-bottom:.5rem}
+.theory-card .mechanism{font-size:.8rem;line-height:1.7;color:var(--red);background:rgba(192,57,63,.04);padding:.6rem;border-radius:8px;margin:.5rem 0}
+
+/* ── Circle ── */
+.circle-card{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;background:#fff;border-radius:12px;margin:.4rem .8rem;box-shadow:0 1px 4px var(--shadow)}
+.circle-icon{font-size:1.5rem}
+.circle-info{flex:1}
+.circle-name{font-size:.9rem;font-weight:600}
+.circle-desc{font-size:.75rem;color:var(--muted)}
+.circle-stats{font-size:.7rem;color:var(--muted);margin-top:.1rem}
+.circle-join{padding:.3rem .7rem;background:rgba(192,57,43,.06);color:var(--red);border:none;border-radius:99px;font-size:.75rem;cursor:pointer}
+
+/* ── Tab Bar ── */
+.tab-bar{display:flex;position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;background:#fff;border-top:1px solid var(--paper2);z-index:100}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:.4rem 0;cursor:pointer;font-size:.65rem;color:var(--muted);transition:color .15s}
+.tab-item.active{color:var(--red)}
+.tab-item .tab-icon{font-size:1.2rem;margin-bottom:.1rem}
+
+/* ── Divider ── */
+.divider{text-align:center;margin:1rem 0;position:relative}
+.divider::before{content:'';position:absolute;top:50%;left:10%;right:10%;height:1px;background:var(--paper2)}
+.divider span{background:var(--paper);padding:0 .8rem;position:relative;font-size:.8rem;color:var(--muted)}
+
+/* ── Animations ── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .3s ease}
+
+/* ── Music Player ── */
+.music-item{display:flex;align-items:center;gap:.7rem;padding:.7rem .8rem;background:#fff;border-radius:12px;margin:.4rem .8rem;border:1px solid var(--paper2);cursor:pointer;transition:all .15s}
+.music-item:active{border-color:var(--gold)}
+.music-item.playing{border-color:var(--red);background:rgba(192,57,43,.03)}
+.music-icon{font-size:1.5rem;width:36px;text-align:center;flex-shrink:0}
+.music-info{flex:1;min-width:0}
+.music-title{font-size:.88rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.music-desc{font-size:.7rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.music-play{width:32px;height:32px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0;cursor:pointer;transition:all .15s}
+.music-item.playing .music-play{animation:pulse 1.5s infinite}
+.music-progress{height:3px;background:var(--paper2);border-radius:99px;margin:0 .8rem;overflow:hidden;display:none}
+.music-progress.active{display:block}
+.music-progress-bar{height:100%;background:var(--red);border-radius:99px;width:0%;transition:width .3s linear}
+.music-now-playing{display:none;padding:.5rem .8rem;background:rgba(192,57,43,.05);border-radius:10px;margin:.4rem .8rem;align-items:center;gap:.5rem}
+.music-now-playing.active{display:flex}
+.music-now-playing .np-icon{font-size:1.2rem}
+.music-now-playing .np-info{flex:1}
+.music-now-playing .np-title{font-size:.8rem;font-weight:600}
+.music-now-playing .np-time{font-size:.7rem;color:var(--muted)}
+.music-now-playing .np-controls{display:flex;gap:.4rem}
+.music-now-playing .np-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--paper2);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.7rem}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+
+/* ── Birth Chart ── */
+.birth-form{padding:.8rem}
+.birth-form label{display:block;font-size:.8rem;color:var(--muted);margin:.6rem 0 .2rem;font-weight:600}
+.birth-form input,.birth-form select{width:100%;padding:.6rem .8rem;border:1.5px solid var(--paper2);border-radius:10px;font-size:.88rem;background:#fff;outline:none;-webkit-appearance:none}
+.birth-form input:focus,.birth-form select:focus{border-color:var(--gold)}
+.birth-form .row{display:flex;gap:.5rem}
+.birth-form .row>div{flex:1}
+.chart-wheel{width:280px;height:280px;margin:1rem auto;position:relative}
+.chart-wheel svg{width:100%;height:100%}
+.chart-planet{display:flex;align-items:center;gap:.5rem;padding:.5rem .7rem;background:#fff;border-radius:10px;margin:.3rem .8rem;border:1px solid var(--paper2)}
+.chart-planet .p-icon{font-size:1.3rem;width:32px;text-align:center}
+.chart-planet .p-info{flex:1}
+.chart-planet .p-name{font-size:.78rem;font-weight:600}
+.chart-planet .p-sign{font-size:.7rem;color:var(--muted)}
+.chart-planet .p-desc{font-size:.72rem;color:var(--ink);margin-top:.1rem;line-height:1.5}
+.chart-summary{background:linear-gradient(135deg,#2c1810,#4a2c1a);color:#f5f0e8;border-radius:12px;padding:1rem;margin:.8rem;text-align:center}
+.chart-summary h3{font-size:1rem;margin-bottom:.3rem}
+.chart-summary p{font-size:.82rem;opacity:.8;line-height:1.6}
+.chart-matches{padding:0 .8rem}
+.chart-match{display:flex;align-items:center;gap:.6rem;padding:.6rem;background:#fff;border-radius:10px;margin:.4rem 0;border:1px solid var(--paper2)}
+.chart-match .m-icon{font-size:1.5rem}
+.chart-match .m-info{flex:1}
+.chart-match .m-label{font-size:.7rem;color:var(--muted)}
+.chart-match .m-value{font-size:.85rem;font-weight:600}
+.chart-match .m-desc{font-size:.72rem;color:var(--ink);margin-top:.1rem}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:0;display:none}
+
+/* ── Tech Arch ── */
+.arch-table{width:100%;font-size:.78rem;border-collapse:collapse;margin:.5rem 0}
+.arch-table th{background:var(--paper2);padding:.5rem;text-align:left;font-weight:600}
+.arch-table td{padding:.5rem;border-bottom:1px solid var(--paper2);vertical-align:top}
+.arch-table td:last-child{color:var(--jade)}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ═══════════ HOME ═══════════ -->
+<div class="page active" id="page-home">
+    <div class="hero">
+        <h1>大观园树洞</h1>
+        <p class="sub">在这里，你可以放下所有防备</p>
+        <p class="motto">"满纸荒唐言，一把辛酸泪。"</p>
+    </div>
+    <div style="text-align:center"><span class="badge">🔒 匿名安全 · 不留痕迹 · 随时离开</span></div>
+
+    <div style="padding:.8rem">
+        <p style="font-size:.95rem;font-weight:600;margin-bottom:.5rem">✨ 找到属于你的院落</p>
+        <div style="display:flex;gap:.5rem">
+            <button class="btn btn-primary" style="flex:1;margin:0" onclick="go('mbti')">🔮 MBTI测试</button>
+            <button class="btn btn-secondary" style="flex:1;margin:0" onclick="go('zodiac')">⭐ 星座指引</button>
+        </div>
+    </div>
+
+    <div class="divider"><span>或直接选择</span></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;padding:0 .8rem" id="scene-grid"></div>
+
+    <div class="divider"><span>更多</span></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;padding:0 .8rem">
+        <div class="card" style="text-align:center;cursor:pointer" onclick="go('treehole')">
+            <div style="font-size:1.8rem">🌳</div>
+            <h3>匿名树洞</h3>
+            <p>写下心事，随风而去</p>
+        </div>
+        <div class="card" style="text-align:center;cursor:pointer" onclick="go('music')">
+            <div style="font-size:1.8rem">🎵</div>
+            <h3>疗愈音乐</h3>
+            <p>古琴·箫·琵琶·自然</p>
+        </div>
+        <div class="card" style="text-align:center;cursor:pointer" onclick="go('social')">
+            <div style="font-size:1.8rem">🌸</div>
+            <h3>匿名共鸣</h3>
+            <p>找到懂你的人</p>
+        </div>
+        <div class="card" style="text-align:center;cursor:pointer" onclick="go('theory')">
+            <div style="font-size:1.8rem">📚</div>
+            <h3>疗愈原理</h3>
+            <p>6大心理学理论</p>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════ MBTI TEST ═══════════ -->
+<div class="page" id="page-mbti">
+    <div class="hero" style="padding:1.5rem">
+        <h1 style="font-size:1.4rem">🔮 心灵指引</h1>
+        <p class="sub">回答8个小问题，找到属于你的院落</p>
+    </div>
+    <div style="padding:0 .8rem">
+        <div style="text-align:center;font-size:.8rem;color:var(--muted)" id="mbti-progress-text">第 0/8 题</div>
+        <div class="progress-bar"><div class="progress-fill" id="mbti-progress" style="width:0%"></div></div>
+    </div>
+    <div id="mbti-content"></div>
+</div>
+
+<!-- ═══════════ MBTI RESULT ═══════════ -->
+<div class="page" id="page-mbti-result">
+    <div class="hero" style="padding:1.5rem">
+        <h1 style="font-size:1.4rem">🔮 你的心灵指引</h1>
+        <p class="sub">大观园中，有一处院落等着你</p>
+    </div>
+    <div id="mbti-result-content"></div>
+</div>
+
+<!-- ═══════════ ZODIAC ═══════════ -->
+<div class="page" id="page-zodiac">
+    <div class="hero" style="padding:1.5rem">
+        <h1 style="font-size:1.4rem">⭐ 星座指引</h1>
+        <p class="sub">选择你的星座，找到属于你的院落</p>
+    </div>
+    <div id="zodiac-content"></div>
+</div>
+
+<!-- ═══════════ ZODIAC RESULT ═══════════ -->
+<div class="page" id="page-zodiac-result">
+    <div class="hero" style="padding:1.5rem">
+        <h1 style="font-size:1.4rem">⭐ 星座指引结果</h1>
+    </div>
+    <div id="zodiac-result-content"></div>
+</div>
+
+
+
+<!-- ═══════════ BIRTH CHART INPUT ═══════════ -->
+
+<div class="page" id="page-birthchart">
+    <div class="hero" style="padding:1.5rem">
+        <h1 style="font-size:1.4rem">🔮 星盘分析</h1>
+        <p class="sub">输入出生信息，解锁你的专属星盘</p>
+    </div>
+    <div class="birth-form">
+        <div class="row">
+            <div>
+                <label>出生日期</label>
+                <input type="date" id="bc-date">
+            </div>
+            <div>
+                <label>出生时间</label>
+                <input type="time" id="bc-time" value="12:00">
+            </div>
+        </div>
+        <div style="margin-top:.5rem">
+            <label>出生城市</label>
+            <select id="bc-city">
+                <option value="116.4,39.9">北京</option>
+                <option value="121.5,31.2">上海</option>
+                <option value="113.3,23.1">广州</option>
+                <option value="114.1,22.5">深圳</option>
+                <option value="104.1,30.7">成都</option>
+                <option value="106.6,29.6">重庆</option>
+                <option value="120.2,30.3">杭州</option>
+                <option value="118.8,32.1">南京</option>
+                <option value="114.3,30.6">武汉</option>
+                <option value="113.0,28.2">长沙</option>
+                <option value="117.0,36.7">济南</option>
+                <option value="108.9,34.3">西安</option>
+                <option value="126.6,45.8">哈尔滨</option>
+                <option value="123.4,41.8">沈阳</option>
+                <option value="125.3,43.9">长春</option>
+                <option value="117.3,31.8">合肥</option>
+                <option value="119.3,26.1">福州</option>
+                <option value="106.7,26.6">贵阳</option>
+                <option value="102.7,25.0">昆明</option>
+                <option value="110.3,20.0">海口</option>
+                <option value="91.1,29.7">拉萨</option>
+                <option value="87.6,43.8">乌鲁木齐</option>
+                <option value="111.7,40.8">呼和浩特</option>
+                <option value="112.5,37.9">太原</option>
+                <option value="108.3,22.8">南宁</option>
+                <option value="106.9,27.7">遵义</option>
+                <option value="115.9,28.7">南昌</option>
+                <option value="103.8,36.1">兰州</option>
+                <option value="110.3,20.0">三亚</option>
+                <option value="0,0">其他（使用北京时间）</option>
+            </select>
+        </div>
+        <p style="font-size:.7rem;color:var(--muted);margin:.6rem 0">💡 出生时间越精确，星盘越准确。不确定可填中午12:00</p>
+        <button class="btn btn-primary" style="width:100%;margin-top:.5rem" onclick="calcBirthChart()">🔮 生成我的星盘</button>
+        <div style="text-align:center;margin-top:.5rem">
+            <button class="btn btn-secondary" onclick="go('zodiac')" style="font-size:.8rem">⭐ 改选星座</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════ BIRTH CHART RESULT ═══════════ -->
+
+<div class="page" id="page-birthchart-result">
+    <div class="hero" style="padding:1.2rem">
+        <h1 style="font-size:1.3rem">🔮 你的星盘</h1>
+        <p class="sub" id="bc-subtitle"></p>
+    </div>
+    <div id="bc-result-content"></div>
+</div>
+
+<!-- ═══════════ SCENE ═══════════ -->
+<div class="page" id="page-scene">
+    <div class="hero" style="padding:1.2rem" id="scene-hero"></div>
+    <div style="padding:.8rem" id="scene-content"></div>
+</div>
+
+<!-- ═══════════ CHAT ═══════════ -->
+<div class="page" id="page-chat" style="padding-bottom:60px">
+    <div style="padding:.6rem .8rem;background:#fff;border-bottom:1px solid var(--paper2);display:flex;align-items:center;gap:.5rem">
+        <span style="cursor:pointer;font-size:1.1rem" onclick="go('scene')">←</span>
+        <span id="chat-title" style="font-weight:600;font-size:.9rem"></span>
+    </div>
+    <div class="chat-area" id="chat-area"></div>
+    <div class="chat-input-bar">
+        <input type="text" id="chat-input" placeholder="说说你的心事..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button onclick="sendChat()">➤</button>
+    </div>
+</div>
+
+<!-- ═══════════ TREEHOLE ═══════════ -->
+<div class="page" id="page-treehole">
+    <div class="hero" style="padding:1.5rem">
+        <h1 style="font-size:1.4rem">🌳 匿名树洞</h1>
+        <p class="sub">写下心事，让它随风而去</p>
+    </div>
+    <div style="text-align:center"><span class="badge">🔒 不会保存、不会发送、不会留下任何痕迹</span></div>
+    <div class="treehole-box">
+        <textarea id="treehole-text" placeholder="在这里，你可以做真实的自己..."></textarea>
+        <p style="font-size:.8rem;color:var(--muted);margin:.6rem 0 .3rem">选择释放方式：</p>
+        <div class="release-options">
+            <div class="release-opt" onclick="releaseTreehole('wind')"><span class="icon">🍃</span>随风飘散</div>
+            <div class="release-opt" onclick="releaseTreehole('lake')"><span class="icon">💧</span>沉入湖底</div>
+            <div class="release-opt" onclick="releaseTreehole('petal')"><span class="icon">🌸</span>化为花瓣</div>
+            <div class="release-opt" onclick="releaseTreehole('smoke')"><span class="icon">🕯️</span>燃为青烟</div>
+        </div>
+    </div>
+    <div id="treehole-result" style="padding:0 .8rem"></div>
+</div>
+
+<!-- ═══════════ MUSIC ═══════════ -->
+<div class="page" id="page-music">
+    <div class="hero" style="padding:1.5rem">
+        <h1 style="font-size:1.4rem">🎵 疗愈音乐</h1>
+        <p class="sub">让声音抚慰你的心</p>
+    </div>
+    <div id="music-content"></div>
+</div>
+
+<!-- ═══════════ SOCIAL ═══════════ -->
+<div class="page" id="page-social">
+    <div class="hero" style="padding:1.5rem">
+        <h1 style="font-size:1.4rem">🌸 匿名共鸣</h1>
+        <p class="sub">你不是一个人。这里有人和你一样。</p>
+    </div>
+    <div style="text-align:center"><span class="badge">🔒 所有内容匿名 · 不显示个人信息</span></div>
+    <div style="display:flex;gap:.3rem;padding:.5rem .8rem;overflow-x:auto">
+        <button class="btn-sm btn-primary" onclick="showSocialTab('wall')" id="stab-wall">🌊 共鸣墙</button>
+        <button class="btn-sm btn-secondary" onclick="showSocialTab('match')" id="stab-match">🔮 情绪匹配</button>
+        <button class="btn-sm btn-secondary" onclick="showSocialTab('circle')" id="stab-circle">🏮 疗愈圈</button>
+        <button class="btn-sm btn-secondary" onclick="showSocialTab('arch')" id="stab-arch">🏗️ 架构</button>
+    </div>
+    <div id="social-content"></div>
+</div>
+
+<!-- ═══════════ THEORY ═══════════ -->
+<div class="page" id="page-theory">
+    <div class="hero" style="padding:1.5rem">
+        <h1 style="font-size:1.4rem">📚 疗愈原理</h1>
+        <p class="sub">每个院落，都有一套心理学理论</p>
+    </div>
+    <div id="theory-content"></div>
+</div>
+
+<!-- ═══════════ RELEASED ═══════════ -->
+<div class="page" id="page-released">
+    <div class="hero" style="padding:2rem">
+        <div style="font-size:3rem" id="released-icon">🍃</div>
+        <h1 style="font-size:1.3rem;margin-top:.5rem" id="released-title">已随风飘散</h1>
+        <p class="sub" id="released-sub">你的心事，已经离开了</p>
+    </div>
+    <div style="padding:1rem;text-align:center" id="released-content"></div>
+</div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════════════
+
+const SCENES = [
+    {name:"潇湘馆",icon:"🎋",desc:"竹林深处，月影斑驳",mood:"孤独、思念",char:"林黛玉",theory:"叙事疗法",style:"倾听你的心事"},
+    {name:"蘅芜苑",icon:"🌿",desc:"幽香弥漫，清冷如月",mood:"迷茫、压抑",char:"薛宝钗",theory:"认知行为疗法",style:"理性帮你理清"},
+    {name:"怡红院",icon:"🌸",desc:"花团锦簇，温暖如春",mood:"焦虑、不安",char:"贾宝玉",theory:"人本主义",style:"温柔化解不安"},
+    {name:"稻香村",icon:"🌾",desc:"田园宁静，炊烟袅袅",mood:"疲惫、倦怠",char:"李纨",theory:"正念+ACT",style:"安静的陪伴"},
+    {name:"藕香榭",icon:"🪷",desc:"碧水清波，荷香四溢",mood:"纠结、犹豫",char:"史湘云",theory:"积极心理学",style:"大大方方翻篇"},
+    {name:"秋爽斋",icon:"📜",desc:"窗明几净，笔墨书香",mood:"愤怒、不满",char:"探春",theory:"赋权+SFBT",style:"陪你把话说清楚"},
+];
+
+const MBTI_Q = [
+    {dim:"EI",q:"周末到了，你更愿意——",a:"约三五好友去大观园赏花做诗",b:"一个人在潇湘馆窗前翻几页闲书",at:"E",bt:"I"},
+    {dim:"EI",q:"遇到烦心事，你更倾向于——",a:"找信任的人倾诉一番",b:"自己慢慢消化，写点东西",at:"E",bt:"I"},
+    {dim:"SN",q:"你更关注——",a:"眼前具体要解决的事",b:"这件事背后的意义和可能性",at:"S",bt:"N"},
+    {dim:"SN",q:"做判断时你更相信——",a:"亲身经历和可靠的数据",b:"内心的直觉和感受",at:"S",bt:"N"},
+    {dim:"TF",q:"朋友遇到困难，你第一反应是——",a:"帮他分析问题，想解决方案",b:"先安慰他的情绪，让他知道有人在",at:"T",bt:"F"},
+    {dim:"TF",q:"做重要决定时你更看重——",a:"利弊分析和长远规划",b:"这件事对身边人的影响",at:"T",bt:"F"},
+    {dim:"JP",q:"你更喜欢——",a:"提前计划好，按部就班",b:"随遇而安，见机行事",at:"J",bt:"P"},
+    {dim:"JP",q:"你的房间通常——",a:"整洁有序，东西各有其位",b:"有点乱但自己找得到东西",at:"J",bt:"P"},
+];
+
+const MBTI_MAP = {
+    INFP:{scene:"潇湘馆",char:"林黛玉",theory:"叙事疗法",desc:"理想主义的诗人灵魂",reason:"你内心丰富而敏感，常常感受到别人忽略的情感。叙事疗法帮助你把内心的故事说出来，把'我就是这样的'变成'我经历了这样的故事'——你不是你的痛苦。",quote:"花谢花飞花满天，红消香断有谁怜？"},
+    INFJ:{scene:"蘅芜苑",char:"薛宝钗",theory:"认知行为疗法",desc:"洞察深刻的远见者",reason:"你有深刻的洞察力，但有时会被自己的'预判'困住。认知行为疗法帮你审视那些'我早就知道会这样'的想法。",quote:"好风凭借力，送我上青云。"},
+    ENFP:{scene:"藕香榭",char:"史湘云",theory:"积极心理学",desc:"热情洋溢的灵感家",reason:"你充满热情和创造力，但容易被负面情绪拖住。积极心理学帮你发现那些一直存在却被忽略的优势和资源。",quote:"是真名士自风流。"},
+    ENFJ:{scene:"怡红院",char:"贾宝玉",theory:"人本主义",desc:"温暖人心的引路人",reason:"你天生善于共情，总是把别人的需求放在前面。但人本主义告诉你：你也需要被无条件接纳。",quote:"这个妹妹我曾见过的。"},
+    INTJ:{scene:"秋爽斋",char:"探春",theory:"赋权+SFBT",desc:"深谋远虑的策略家",reason:"你有清晰的战略思维，遇到问题第一反应是'怎么解决'。赋权理论认可你的主动性，同时帮你看到——有些问题不是你的错。",quote:"我但凡是个男人，可以出得去，我必早走了。"},
+    INTP:{scene:"蘅芜苑",char:"薛宝钗",theory:"认知行为疗法",desc:"独立思考的探索者",reason:"你善于分析，喜欢从多个角度看问题。CBT的苏格拉底式提问简直就是为你设计的。",quote:"任是无情也动人。"},
+    ENTJ:{scene:"秋爽斋",char:"探春",theory:"赋权+SFBT",desc:"果断有力的指挥官",reason:"你是天生的领导者，习惯掌控局面。但赋权理论提醒你：真正的力量不是控制一切，而是知道什么时候该放手。",quote:"百足之虫，死而不僵。"},
+    ENTP:{scene:"藕香榭",char:"史湘云",theory:"积极心理学",desc:"机智灵活的发明家",reason:"你思维敏捷，喜欢挑战常规。积极心理学的'重新建构'技巧会让你如鱼得水。",quote:"寒塘渡鹤影，冷月葬花魂。"},
+    ISFP:{scene:"潇湘馆",char:"林黛玉",theory:"叙事疗法",desc:"温柔敏感的艺术家",reason:"你敏感而富有艺术气质，内心世界丰富但难以表达。叙事疗法不要求你'说清楚'，而是通过隐喻和仪式来安放感受。",quote:"质本洁来还洁去，强于污淖陷渠沟。"},
+    ISFJ:{scene:"稻香村",char:"李纨",theory:"正念+ACT",desc:"温暖守护的守护者",reason:"你善良可靠，总是默默照顾身边的人。正念疗法提醒你：照顾别人之前，先照顾自己。",quote:"世事洞明皆学问，人情练达即文章。"},
+    ESFP:{scene:"藕香榭",char:"史湘云",theory:"积极心理学",desc:"活力四射的表演家",reason:"你热爱生活，享受当下。积极心理学的PERMA模型帮你把这种天赋系统化。",quote:"英豪阔大宽宏量。"},
+    ESFJ:{scene:"怡红院",char:"贾宝玉",theory:"人本主义",desc:"热心周到的社交家",reason:"你天生善于创造温暖的人际关系。人本主义的无条件积极关注，正是你给别人的东西——现在，让别人也这样对你。",quote:"莫失莫忘，不离不弃。"},
+    ISTP:{scene:"秋爽斋",char:"探春",theory:"赋权+SFBT",desc:"冷静灵活的实干家",reason:"你冷静务实，善于在危机中找到解决方案。焦点解决短期疗法和你的思维方式高度契合。",quote:"千里搭长棚，没有个不散的筵席。"},
+    ISTJ:{scene:"蘅芜苑",char:"薛宝钗",theory:"认知行为疗法",desc:"可靠负责的执行者",reason:"你重视秩序和规则。CBT的结构化方法（情绪日记、思维记录表）非常适合你。",quote:"淡极始知花更艳。"},
+    ESTP:{scene:"藕香榭",char:"史湘云",theory:"积极心理学",desc:"大胆果敢的冒险家",reason:"你行动力强，活在当下。积极心理学的'优势使用'策略帮你把冒险精神转化为心理韧性。",quote:"萧疏白发不盈颠，守阁清秋一梦远。"},
+    ESTJ:{scene:"秋爽斋",char:"探春",theory:"赋权+SFBT",desc:"高效有序的管理者",reason:"你高效务实，习惯建立秩序。赋权理论帮你区分'我能控制的'和'我不能控制的'。",quote:"一帆风雨路三千。"},
+};
+
+const ZODIAC = [
+    {sign:"♈ 白羊座",date:"3.21-4.19",elem:"火",scene:"秋爽斋",char:"探春",trait:"行动力强、直率热情",reason:"白羊座天生行动派，遇到不公就要说出来。秋爽斋的赋权理论帮你把愤怒转化为改变的力量。"},
+    {sign:"♉ 金牛座",date:"4.20-5.20",elem:"土",scene:"蘅芜苑",char:"薛宝钗",trait:"稳重踏实、注重实际",reason:"金牛座需要稳定和安全感。蘅芜苑的CBT帮你用理性的方式审视那些让你不安的想法。"},
+    {sign:"♊ 双子座",date:"5.21-6.21",elem:"风",scene:"藕香榭",char:"史湘云",trait:"灵活多变、善于表达",reason:"双子座思维活跃，容易想太多。藕香榭的积极心理学帮你用幽默和乐观来化解纠结。"},
+    {sign:"♋ 巨蟹座",date:"6.22-7.22",elem:"水",scene:"潇湘馆",char:"林黛玉",trait:"情感丰富、敏感细腻",reason:"巨蟹座内心柔软，容易受伤。潇湘馆的叙事疗法给你一个安全的空间，允许脆弱的存在。"},
+    {sign:"♌ 狮子座",date:"7.23-8.22",elem:"火",scene:"怡红院",char:"贾宝玉",trait:"自信大方、渴望认可",reason:"狮子座表面坚强，内心也需要被看见。怡红院的人本主义给你无条件的接纳。"},
+    {sign:"♍ 处女座",date:"8.23-9.22",elem:"土",scene:"蘅芜苑",char:"薛宝钗",trait:"追求完美、善于分析",reason:"处女座对自己要求很高，容易陷入自我批评。CBT帮你识别'全或无'等认知扭曲。"},
+    {sign:"♎ 天秤座",date:"9.23-10.23",elem:"风",scene:"怡红院",char:"贾宝玉",trait:"追求和谐、善于共情",reason:"天秤座总是照顾各方的感受，自己却累了。人本主义告诉你：你的感受同样重要。"},
+    {sign:"♏ 天蝎座",date:"10.24-11.22",elem:"水",scene:"潇湘馆",char:"林黛玉",trait:"深沉内敛、感受强烈",reason:"天蝎座的情感像深海一样深沉。叙事疗法帮你把深藏的感受转化为可以被安放的故事。"},
+    {sign:"♐ 射手座",date:"11.23-12.21",elem:"火",scene:"藕香榭",char:"史湘云",trait:"乐观开朗、追求自由",reason:"射手座热爱自由，讨厌被束缚。积极心理学帮你把这种能量转化为持久的心理韧性。"},
+    {sign:"♑ 摩羯座",date:"12.22-1.19",elem:"土",scene:"秋爽斋",char:"探春",trait:"坚韧务实、目标明确",reason:"摩羯座习惯独自承担一切。赋权理论提醒你：寻求帮助不是软弱，是智慧。"},
+    {sign:"♒ 水瓶座",date:"1.20-2.18",elem:"风",scene:"蘅芜苑",char:"薛宝钗",trait:"独立思考、理性冷静",reason:"水瓶座善于跳出框架看问题。CBT的认知重评技巧和你的思维方式天然契合。"},
+    {sign:"♓ 双鱼座",date:"2.19-3.20",elem:"水",scene:"潇湘馆",char:"林黛玉",trait:"富有同理心、感受力强",reason:"双鱼座容易吸收别人的情绪，分不清哪些是自己的。叙事疗法帮你把'我的故事'和'别人的故事'分开。"},
+];
+
+const ELEMENTS = {
+    "火":{style:"行动与转化",color:"#e74c3c",advice:"你的能量来自行动。当你感到低落时，不要试图'想通'——去做点什么。哪怕只是散步十分钟，也能点燃内心的火焰。"},
+    "土":{style:"稳定与秩序",color:"#8B7355",advice:"你需要安全感和确定性。当你感到不安时，回到 basics：规律的作息、整洁的环境、一顿好饭。稳定感会从外部传递到内心。"},
+    "风":{style:"连接与表达",color:"#3498db",advice:"你的能量来自与他人的连接。当你感到孤独时，不要一个人扛——找一个信任的人，哪怕只是聊聊天气。"},
+    "水":{style:"感受与疗愈",color:"#2980b9",advice:"你的感受力是你的天赋，也是你的软肋。当你被情绪淹没时，记住：你不是你的情绪。给情绪一个名字，它就不再是你了。"},
+};
+
+const MUSIC = [
+    {icon:"🎵",title:"潇湘夜雨",desc:"古琴 · 空灵悠远",scene:"潇湘馆",mood:"孤独时听",type:"guqin"},
+    {icon:"🎶",title:"冷香清韵",desc:"古琴 · 清冷宁静",scene:"蘅芜苑",mood:"需要清醒时",type:"guqin2"},
+    {icon:"🎵",title:"怡红暖阳",desc:"古筝 · 温柔治愈",scene:"怡红院",mood:"不安时听",type:"guzheng"},
+    {icon:"🎶",title:"稻香蛙鸣",desc:"自然 · 夏夜田园",scene:"稻香村",mood:"疲惫时听",type:"frogs"},
+    {icon:"🎵",title:"藕香风铃",desc:"风铃 · 清脆悦耳",scene:"藕香榭",mood:"纠结时听",type:"chimes"},
+    {icon:"🎶",title:"秋爽松风",desc:"自然 · 山间松涛",scene:"秋爽斋",mood:"愤怒时听",type:"wind"},
+    {icon:"🌧️",title:"雨打芭蕉",desc:"自然 · 细雨绵绵",scene:"潇湘馆",mood:"失眠时听",type:"rain"},
+    {icon:"🔥",title:"炉火温暖",desc:"壁炉 · 柴火噼啪",scene:"怡红院",mood:"寒冷时听",type:"fire"},
+];
+
+const POSTS = [
+    {mood:"😔",tag:"孤独",content:"今天又是一个人吃饭。食堂里全是三五成群的，我端着盘子找了个角落。不是没人愿意跟我坐，是我不知道该怎么开口说'我可以坐这里吗'。",resonances:47,replies:12,time:"3小时前",circle:"潇湘馆"},
+    {mood:"😤",tag:"职场",content:"领导当着所有人的面批评我的方案。其实方案没问题，他根本没看。但我不能反驳，因为他是领导。回家路上哭了很久。",resonances:89,replies:23,time:"5小时前",circle:"秋爽斋"},
+    {mood:"💔",tag:"失恋",content:"分手第42天。以为已经好了，结果今天听到那首歌，眼泪就下来了。原来'好了'只是把悲伤藏起来了，不是真的好了。",resonances:156,replies:34,time:"昨天",circle:"潇湘馆"},
+    {mood:"😰",tag:"焦虑",content:"考研倒计时30天，每天学到凌晨两点还是觉得不够。室友都睡了，我一个人在走廊背书。有时候会想，如果考不上怎么办？",resonances:203,replies:45,time:"昨天",circle:"蘅芜苑"},
+    {mood:"😊",tag:"成长",content:"今天鼓起勇气在会上发了言。虽然声音在抖，虽然只说了三句话，但我做到了。以前的我连举手都不敢。",resonances:267,replies:52,time:"3天前",circle:"怡红院"},
+    {mood:"😢",tag:"家庭",content:"爸妈又吵架了。每次他们吵架我就躲进房间戴上耳机。从小到大都是这样。有时候想，是不是我不存在他们就不会吵架了。",resonances:145,replies:38,time:"3天前",circle:"潇湘馆"},
+];
+
+const CIRCLES = [
+    {name:"黛玉的花冢",icon:"🎋",desc:"孤独、思念、无处诉说",members:"2,341",posts:"892"},
+    {name:"蘅芜清谈",icon:"🌿",desc:"焦虑、迷茫、需要清醒",members:"1,856",posts:"634"},
+    {name:"怡红夜话",icon:"🌸",desc:"不安、脆弱、需要温暖",members:"3,120",posts:"1,247"},
+    {name:"稻香小憩",icon:"🌾",desc:"疲惫、倦怠、需要休息",members:"1,567",posts:"423"},
+    {name:"藕香诗社",icon:"🪷",desc:"分享成长、互相鼓励",members:"2,890",posts:"1,567"},
+    {name:"秋爽议事",icon:"📜",desc:"职场、公平、需要行动",members:"1,234",posts:"567"},
+];
+
+const THEORIES = [
+    {scene:"潇湘馆",icon:"🎋",theory:"叙事疗法",author:"Michael White & David Epston, 1990",
+     core:"通过'外化'技术，将人与问题分离——你不是你的痛苦，痛苦是来访你的一位客人。",
+     mechanism:"黛玉的'葬花'本身就是一种叙事仪式——她不是在埋花，是在安放自己的情绪。",
+     evidence:"Pennebaker(1997)：连续3天每天写15分钟 deepest thoughts，6周后就医率下降43%。"},
+    {scene:"蘅芜苑",icon:"🌿",theory:"认知行为疗法 CBT",author:"Aaron Beck, 1976",
+     core:"困扰我们的不是事件本身，而是我们对事件的解读。通过识别'认知扭曲'，用更平衡的想法替代自动负性思维。",
+     mechanism:"宝钗的'冷香丸'就是认知重评的隐喻——用冷静的理性来调和过热的情绪。",
+     evidence:"Hofmann et al.(2012)元分析：CBT对焦虑障碍有效率60-80%，效果持续5年以上。"},
+    {scene:"怡红院",icon:"🌸",theory:"人本主义心理学",author:"Carl Rogers, 1951",
+     core:"每个人都有自我实现的倾向。治疗师提供三个核心条件：无条件积极关注、共情、真诚一致。",
+     mechanism:"宝玉说'这个妹妹我曾见过的'——天然的无条件接纳，不需要你'表现好'才值得被爱。",
+     evidence:"Rogers(1961)：治疗关系本身就有治愈力，比具体技术更重要。"},
+    {scene:"稻香村",icon:"🌾",theory:"正念 + 接纳承诺疗法 ACT",author:"Kabat-Zinn, 1990 / Hayes, 1999",
+     core:"不是要消除痛苦，而是改变与痛苦的关系。通过正念觉察当下，通过接纳承诺行动创造有价值的生活。",
+     mechanism:"稻香村的宁静不是逃避，而是'如其所是'地存在——允许一切发生，不评判，不抗拒。",
+     evidence:"Kabat-Zinn(2003)：8周MBSR课程后，参与者焦虑减少58%，睡眠质量提升42%。"},
+    {scene:"藕香榭",icon:"🪷",theory:"积极心理学",author:"Martin Seligman, 1998",
+     core:"心理学不应只关注'什么出了问题'，更应关注'什么是对的'。通过培养积极情绪、投入、关系、意义、成就(PERMA)来构建幸福。",
+     mechanism:"湘云醉卧芍药裀——不是'没心没肺'，而是一种真正的心理韧性：允许自己快乐，即使世界不完美。",
+     evidence:"Seligman et al.(2005)：积极干预组抑郁复发率比对照组低50%。"},
+    {scene:"秋爽斋",icon:"📜",theory:"赋权理论 + 焦点解决 SFBT",author:"Rapp, 1997 / de Shazer, 1985",
+     core:"赋权理论强调个人对自己生活的掌控权；SFBT不追问'为什么'，而是聚焦'怎么办'——寻找例外、设定小目标。",
+     mechanism:"探春理家——不是抱怨命运，而是主动改变能改变的一切。'我但凡是个男人，可以出得去，我必早走了。'",
+     evidence:"de Shazer(1991)：SFBT平均3-5次会谈即可产生显著改变，远少于传统疗法的15-20次。"},
+];
+
+const TREEHOLE_REPLIES = [
+    "风听到了。树也听到了。你说的每一句话，都有人在意。\n\n现在，让它去吧。",
+    "这片竹林记住了你的声音。没有人会知道，但你自己知道——你已经很勇敢了。",
+    "月光洒在你的心事上，像一层薄薄的银纱。明天醒来，你会轻一点。",
+    "湖水很深，可以装下所有的委屈。你不需要一直坚强。",
+    "花瓣落下的声音很轻，但每一片都是真的。你的感受也是。",
+    "青烟升起的时候，那些沉重的东西会变轻。不是消失，是变成了别的东西。",
+];
+
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
+let state = {
+    mbtiAnswers: {},
+    mbtiResult: null,
+    currentScene: null,
+    chatHistory: [],
+    currentPage: 'home',
+};
+
+// ═══════════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════════
+function go(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const el = document.getElementById('page-' + page);
+    if (el) { el.classList.add('active'); el.scrollTop = 0; }
+    state.currentPage = page;
+    window.scrollTo(0, 0);
+
+    // Chat input bar visibility
+    const app = document.getElementById('app');
+    if (page === 'chat') app.classList.add('page-chat-active');
+    else app.classList.remove('page-chat-active');
+
+    // Init pages
+    if (page === 'mbti') initMBTI();
+    if (page === 'zodiac') initZodiac();
+    if (page === 'birthchart') initBirthChart();
+    if (page === 'music') initMusic();
+    if (page === 'theory') initTheory();
+    if (page === 'social') showSocialTab('wall');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  HOME
+// ═══════════════════════════════════════════════════════════
+function initHome() {
+    const grid = document.getElementById('scene-grid');
+    grid.innerHTML = SCENES.map((s, i) => `
+        <div class="scene-card" onclick="enterScene(${i})">
+            <div class="scene-icon">${s.icon}</div>
+            <div class="scene-name">${s.name}</div>
+            <div class="scene-desc">${s.desc}</div>
+            <div style="text-align:center;margin:.3rem 0"><span class="scene-mood">${s.mood}</span></div>
+            <div class="scene-theory">📐 ${s.theory}</div>
+            <div class="scene-char">🧑 ${s.char} · ${s.style}</div>
+        </div>
+    `).join('');
+}
+
+function enterScene(i) {
+    state.currentScene = SCENES[i];
+    state.chatHistory = [];
+    const s = SCENES[i];
+    document.getElementById('scene-hero').innerHTML = `
+        <div style="font-size:2rem">${s.icon}</div>
+        <h1 style="font-size:1.3rem;margin-top:.3rem">${s.name}</h1>
+        <p class="sub">${s.desc}</p>`;
+    document.getElementById('scene-content').innerHTML = `
+        <div class="card" style="text-align:center">
+            <p style="font-size:.85rem;color:var(--muted);margin-bottom:.5rem">🧑 倾听者：<strong>${s.char}</strong></p>
+            <p style="font-size:.82rem;color:var(--muted)">📐 ${s.theory}</p>
+            <p style="font-size:.8rem;color:var(--ink);margin-top:.5rem">${s.style}</p>
+        </div>
+        <button class="btn btn-primary" onclick="startChat()">💬 开始倾诉</button>
+        <button class="btn btn-secondary" onclick="go('treehole')">🌳 匿名树洞</button>
+        <button class="btn btn-outline" onclick="go('home')">← 返回</button>`;
+    go('scene');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  MBTI
+// ═══════════════════════════════════════════════════════════
+function initMBTI() {
+    state.mbtiAnswers = {};
+    renderMBTIQuestion();
+}
+
+function renderMBTIQuestion() {
+    const answered = Object.keys(state.mbtiAnswers).length;
+    document.getElementById('mbti-progress-text').textContent = `第 ${answered}/8 题`;
+    document.getElementById('mbti-progress').style.width = (answered / 8 * 100) + '%';
+
+    if (answered >= 8) {
+        calcMBTI();
+        return;
+    }
+
+    const q = MBTI_Q[answered];
+    document.getElementById('mbti-content').innerHTML = `
+        <div class="q-card card fade-in">
+            <div class="q-num">第 ${answered + 1} 题</div>
+            <div class="q-text">${q.q}</div>
+            <div class="q-options">
+                <div class="q-opt" onclick="answerMBTI(${answered},'${q.at}')">${q.a}</div>
+                <div class="q-opt" onclick="answerMBTI(${answered},'${q.bt}')">${q.b}</div>
+            </div>
+        </div>`;
+}
+
+function answerMBTI(idx, tag) {
+    state.mbtiAnswers[idx] = tag;
+    renderMBTIQuestion();
+}
+
+function calcMBTI() {
+    const dims = {E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0};
+    Object.values(state.mbtiAnswers).forEach(t => dims[t]++);
+    const mbti = (dims.E>=dims.I?'E':'I') + (dims.S>=dims.N?'S':'N') + (dims.T>=dims.F?'T':'F') + (dims.J>=dims.P?'J':'P');
+    state.mbtiResult = mbti;
+    showMBTIResult(mbti);
+}
+
+function showMBTIResult(mbti) {
+    const info = MBTI_MAP[mbti] || MBTI_MAP.INFP;
+    const scene = SCENES.find(s => s.name === info.scene) || SCENES[0];
+    const dimLabels = {E:"外向",I:"内向",S:"感觉",N:"直觉",T:"思维",F:"情感",J:"判断",P:"感知"};
+    const dimDescs = {E:"从互动中获取能量",I:"从独处中获取能量",S:"关注具体事实",N:"关注可能性",T:"优先考虑逻辑",F:"优先考虑感受",J:"偏好有计划",P:"偏好灵活开放"};
+
+    document.getElementById('mbti-result-content').innerHTML = `
+        <div style="padding:.8rem">
+            <div class="result-type">${mbti}</div>
+            <div class="result-desc">${info.desc}</div>
+            <div class="result-scene">
+                <div class="icon">${scene.icon}</div>
+                <div class="name">推荐：${info.scene}</div>
+                <div class="info">倾听者：${info.char} · ${info.theory}</div>
+            </div>
+            <div class="result-reason">
+                <div style="font-size:.78rem;color:var(--red);font-weight:600;margin-bottom:.3rem">为什么适合你</div>
+                ${info.reason}
+            </div>
+            <div class="result-quote">"${info.quote}"</div>
+            <div class="dim-row">
+                ${[0,1,2,3].map(i => {
+                    const l = mbti[i];
+                    return `<div class="dim-item"><div class="letter">${l}</div><div class="label">${dimLabels[l]}</div><div class="desc">${dimDescs[l]}</div></div>`;
+                }).join('')}
+            </div>
+            <button class="btn btn-primary" onclick="enterScene(${SCENES.indexOf(scene)})">🎋 进入${info.scene}找${info.char}</button>
+            <button class="btn btn-secondary" onclick="go('zodiac')">⭐ 改选星座</button>
+            <button class="btn btn-outline" onclick="state.mbtiAnswers={};initMBTI();go('mbti')">🔄 重新测试</button>
+        </div>`;
+    go('mbti-result');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ZODIAC
+// ═══════════════════════════════════════════════════════════
+function initZodiac() {
+    const groups = {"火象":[0,4,8],"土象":[1,5,9],"风象":[2,6,10],"水象":[3,7,11]};
+    const colors = {"火象":"#e74c3c","土象":"#8B7355","风象":"#3498db","水象":"#2980b9"};
+    let html = '';
+    for (const [elem, indices] of Object.entries(groups)) {
+        html += `<div class="elem-label" style="color:${colors[elem]}">${elem}</div>`;
+        html += '<div class="zodiac-grid">';
+        indices.forEach(i => {
+            const z = ZODIAC[i];
+            html += `<div class="zodiac-btn" onclick="showZodiacResult(${i})">
+                <span class="icon">${z.sign.split(' ')[0]}</span>
+                ${z.sign.split(' ')[1]}
+                <div class="trait">${z.date} · ${z.trait}</div>
+            </div>`;
+        });
+        html += '</div>';
+    }
+    html += '<div style="padding:.8rem;display:flex;gap:.5rem"><button class="btn btn-secondary" style="flex:1" onclick="go(\'birthchart\')">🔮 星盘分析</button><button class="btn btn-secondary" style="flex:1" onclick="go(\'mbti\')">🧠 MBTI测试</button></div>';
+    document.getElementById('zodiac-content').innerHTML = html;
+}
+
+function showZodiacResult(i) {
+    const z = ZODIAC[i];
+    const elem = ELEMENTS[z.elem];
+    const scene = SCENES.find(s => s.name === z.scene) || SCENES[0];
+    document.getElementById('zodiac-result-content').innerHTML = `
+        <div style="padding:.8rem">
+            <div style="text-align:center;padding:.8rem;background:#fff;border-radius:12px;border:2px solid ${elem.color};margin-bottom:.8rem">
+                <div style="font-size:1.8rem">${z.sign.split(' ')[0]}</div>
+                <div style="font-size:.85rem;color:var(--muted)">${z.sign.split(' ')[1]} · ${z.date}</div>
+                <div style="font-size:.75rem;color:var(--muted);margin-top:.1rem">${z.elem}象 · ${z.trait}</div>
+                <div style="font-size:.72rem;color:${elem.color};margin-top:.2rem">疗愈风格：${elem.style}</div>
+            </div>
+            <div class="result-scene">
+                <div class="icon">${scene.icon}</div>
+                <div class="name">推荐：${z.scene}</div>
+                <div class="info">倾听者：${z.char}</div>
+            </div>
+            <div class="result-reason">${z.reason}</div>
+            <div style="background:var(--paper2);border-radius:10px;padding:.8rem;margin:.8rem">
+                <div style="font-size:.78rem;color:${elem.color};font-weight:600;margin-bottom:.3rem">💡 ${z.elem}象专属建议</div>
+                <div style="font-size:.82rem;line-height:1.7">${elem.advice}</div>
+            </div>
+            <button class="btn btn-primary" onclick="enterScene(${SCENES.indexOf(scene)})">${scene.icon} 进入${z.scene}</button>
+            <button class="btn btn-secondary" onclick="go('mbti')">🔮 改做MBTI测试</button>
+        </div>`;
+    go('zodiac-result');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  CHAT
+// ═══════════════════════════════════════════════════════════
+function startChat() {
+    const s = state.currentScene;
+    document.getElementById('chat-title').textContent = `${s.icon} ${s.char} · ${s.name}`;
+    state.chatHistory = [];
+
+    const greetings = {
+        "林黛玉":"……你来了。坐吧。\n\n竹叶在响，像是在替谁说话。你想说什么，就说吧。在这里，你不需要假装坚强。",
+        "薛宝钗":"你来了。请坐。\n\n蘅芜苑清静，适合说些心里话。你最近遇到了什么事？慢慢说，不急。",
+        "贾宝玉":"你来了！快坐快坐！\n\n别拘束，在这里你想说什么都可以。我听着呢。",
+        "李纨":"……嗯，你来了。\n\n坐吧。稻香村没什么好招待的，但安静。你想说什么，就说吧。",
+        "史湘云":"哎呀，你可算来了！\n\n快坐快坐，别站着。有什么事儿尽管说，咱们这儿不讲究那些虚的！",
+        "探春":"你来了。请坐。\n\n有什么事，直说就好。我这个人不喜欢绕弯子，但我会认真听你说完。"
+    };
+
+    state.chatHistory.push({role:'ai', name: s.char, text: greetings[s.char] || "你来了。请坐。"});
+    renderChat();
+    go('chat');
+}
+
+function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function renderChat() {
+    const area = document.getElementById('chat-area');
+    area.innerHTML = state.chatHistory.map(m => `
+        <div class="chat-bubble ${m.role}">
+            ${m.role === 'ai' ? `<div class="name">${escHtml(m.name)}</div>` : ''}
+            ${escHtml(m.text).replace(/\n/g, '<br>')}
+        </div>
+    `).join('');
+    area.scrollTop = area.scrollHeight;
+}
+
+function sendChat() {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    state.chatHistory.push({role:'user', text});
+    renderChat();
+    setTimeout(() => {
+        const s = state.currentScene;
+        const response = getAIResponse(s.char, text, state.chatHistory);
+        state.chatHistory.push({role:'ai', name: s.char, text: response});
+        renderChat();
+    }, 800 + Math.random() * 1200);
+}
+
+function getAIResponse(char, text, history) {
+    const userMsgCount = history.filter(m => m.role === 'user').length;
+    const isFollowUp = userMsgCount > 1;
+    const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    const emotions = {
+        sad: /难过|伤心|哭|悲伤|心痛|难受|委屈|不开心|低落|抑郁|绝望|流泪|想哭|痛|失去|离开|分手|去世|走了|不在了|再也|遗憾|后悔|自责|内疚/,
+        anxious: /焦虑|紧张|害怕|恐惧|担心|不安|压力|崩溃|扛不住|喘不过|失眠|睡不着|心慌|心跳|发抖|慌|万一|怎么办|考试|面试|deadline|截止|来不及/,
+        angry: /生气|愤怒|讨厌|恨|不公平|凭什么|烦|恶心|混蛋|气死|无语|忍不了|受够了|欺负|利用|背叛|骗|撒谎|虚伪/,
+        lost: /迷茫|不知道|方向|意义|活着|为什么|空虚|无聊|没意思|目标|未来|选择|纠结|犹豫|到底|应该|该不该|值不值得/,
+        tired: /累|疲惫|倦怠|撑不住|撑不下去|好累|太累|筋疲力|透支|加班|熬夜|起不来|没精神|不想动|摆烂|躺平|倦了|麻木/,
+        lonely: /孤独|一个人|没人|寂寞|被抛弃|不被理解|没人在乎|孤单|没朋友|合不来|融入不了|格格不入|没人懂/,
+        happy: /开心|高兴|快乐|幸福|兴奋|期待|好消息|成功|做到了|通过了|录取|涨薪|升职|终于|太好了/,
+        grateful: /谢谢|感恩|感谢|幸运|珍惜|温暖|感动/,
+        confused: /搞不懂|不理解|不明白|为什么这样|怎么回事|奇怪|离谱|无语|懵|迷惑/,
+    };
+
+    let detected = [];
+    for (const [emo, regex] of Object.entries(emotions)) {
+        if (regex.test(text)) detected.push(emo);
+    }
+
+    const R = {
+        "林黛玉": {
+            sad: ["……我听到了。\n\n你不需要解释为什么难过。难过就是难过，不需要理由。就像花落了，不需要理由。\n\n你愿意跟我说说，是什么让你这么难过吗？","……你的难过，我感受到了。\n\n有时候人就是这样，明明心里下着雨，脸上还要装作晴天。但在我这里，你不需要假装。\n\n你现在最想说什么？","……嗯。\n\n你知道吗，竹子在暴风雨后反而长得更直。不是因为风雨让它变强了，而是因为它本来就够坚韧。\n\n你比你以为的坚强。"],
+            anxious: ["……你心里的那些万一，像竹叶一样层层叠叠，对吗？\n\n但你知道吗，竹子之所以能弯而不折，就是因为它允许自己被风吹。你不需要对抗焦虑，只需要允许它存在一会儿。","……焦虑的时候，人容易把所有坏事都想一遍。\n\n但你想过没有，你担心的那些事，有多少真的发生了？\n\n试试把担心写下来，你会发现，大部分都是纸老虎。","……嗯。你的不安我听到了。\n\n但我想告诉你一件事：你现在坐在这里，跟我说话，这本身就需要勇气。\n\n你已经在面对了，只是你自己没意识到。"],
+            angry: ["……嗯。你生气，是因为你在乎。\n\n不在乎的人不会生气。你的愤怒是有重量的，它说明你有底线。\n\n但别让愤怒灼伤了自己。跟我说说，发生了什么？","……你的愤怒是合理的。\n\n但我想问你：你是在气那件事，还是在气自己？\n\n有时候我们最生气的，其实是自己没有早点离开、早点拒绝。","……嗯。\n\n你知道吗，我以前也经常生气。后来我发现，愤怒像火，烧的是自己。\n\n你值得更好的，不该把时间花在生气上。"],
+            lost: ["……有时候，不知道往哪里走，是因为还没有找到属于自己的路。\n\n但这不是你的错。路是走出来的，不是想出来的。\n\n你现在站在哪里？","……迷茫的时候，我有一个建议：\n\n不要想我这辈子要做什么，只想我这周能做一件什么小事。\n\n方向是一步一步走出来的。","……嗯。\n\n其实迷茫不一定是坏事。至少说明你在思考，你没有麻木地随波逐流。\n\n你最近在纠结什么？跟我说说。"],
+            tired: ["……你已经很努力了。\n\n不是还可以更努力，是你已经很努力了。允许自己累，允许自己停下来。\n\n竹子也有冬天不生长的时候。但春天来了，它会长得更高。","……你累，是因为你一直在付出，但没有人给你充电。\n\n从今天开始，每天给自己留一个小时，什么都不做，就是待着。\n\n这不是偷懒，这是自救。","……嗯。\n\n你有没有发现，你已经很久没有为自己做一件事了？\n\n不是为工作、不是为别人，就是为你自己。\n\n今天试试？"],
+            lonely: ["……我懂。\n\n潇湘馆的竹子也是一棵一棵的，每一棵都是孤独的。但它们一起在风里沙沙作响，就像是在说话。\n\n你不是一个人。至少现在，我在听。","……孤独不是因为身边没有人，而是因为没有人懂你。\n\n但懂是可以慢慢建立的。你愿意试着跟一个人说真话吗？","……嗯。\n\n你知道吗，我也是一个人住在潇湘馆的。\n\n但我不觉得孤独，因为我知道，总有人会来。\n\n你也会遇到那个人的。"],
+            happy: ["……你笑了。\n\n这很好。你笑起来的时候，像春天的竹笋刚冒出来。\n\n是什么好事？跟我说说，让我也高兴高兴。","……嗯，真好。\n\n你值得这些好的事情。不要觉得我不配——你配。\n\n好好享受这一刻。","……你开心，我也替你高兴。\n\n记住这种感觉。以后难过的时候，想想今天。"],
+            grateful: ["……嗯。\n\n你是一个懂得感恩的人，这说明你心里有光。\n\n这份温暖，也会照亮你身边的人。","……你说的这些，让我觉得，这个世界还是有温度的。\n\n谢谢你告诉我。"],
+            confused: ["……搞不懂的事情，有时候不需要搞懂。\n\n有些答案，时间会给你。\n\n你现在只需要做好眼前的事。","……嗯。\n\n你说的这些，确实让人困惑。\n\n但困惑比麻木好——至少你在思考。"],
+        },
+        "薛宝钗": {
+            sad: ["我理解你的感受。\n\n但我想问你一个问题：你现在的难过，有多少是因为发生了什么事，有多少是因为你对这件事的想法？\n\n有时候，困住我们的不是事情本身，而是我们对它的解读。","我听到了。\n\n你现在最需要做的，不是想通，而是允许。允许自己难过，允许自己不完美。\n\n冷香丸的第一味药就是接纳。","嗯，我理解。\n\n但我想提醒你一件事：你现在的状态是暂时的，不是永久的。\n\n情绪像天气，会变。你只需要等一等。"],
+            anxious: ["你说的这些担心，有百分之多少是已经发生的，有百分之多少是你想象可能发生的？\n\n冷香丸的配方里有一味无根的水——意思是，不要让没有根据的担忧扎根在你心里。","我教你一个方法：把你的担心写下来，然后问自己三个问题——\n\n1. 这件事最坏的结果是什么？\n2. 最坏的结果真的会发生吗？\n3. 就算发生了，我能应对吗？","嗯，焦虑的时候，人的思维会灾难化——把小问题放大成大问题。\n\n你现在可以做一个练习：深呼吸三次，然后告诉我，你此刻最真实的感受是什么？"],
+            angry: ["我理解你的愤怒。这件事确实不公平。\n\n但我想请你做一件事：把你现在脑子里的话写下来，然后等明天再看一遍。","嗯，愤怒是正常的。\n\n但我想让你区分两件事：这件事让我生气和我需要为此做点什么。\n\n有时候，最好的回应是不回应。","我听到了。\n\n但你知道吗，愤怒消耗的能量，可以用来做很多更有意义的事。\n\n你愿意把这份能量转化成行动吗？"],
+            lost: ["迷茫的时候，不要试图想清楚所有事。\n\n先做一件小事——任何一件小事。做完之后，方向往往会自己浮现出来。\n\n你今天能做的一件小事是什么？","嗯，我理解。\n\n但不知道做什么和什么都不做是两回事。\n\n你现在可以列一个清单：你擅长什么、你喜欢什么、你讨厌什么。","迷茫是思考的开始，不是结束。\n\n你愿意跟我说说你现在的处境吗？也许我能帮你理一理。"],
+            tired: ["你累是因为你一直在消耗，但没有补充。\n\n人不是机器，不能一直运转。你需要给自己充电——不是刷手机那种，是真正的休息。","嗯，你已经到了极限了。\n\n但我想问你：你累的，是身体还是心？\n\n如果是身体，去睡觉。如果是心，需要做一件让你开心的事。","我理解。\n\n但累有时候是一种信号——它在告诉你，你需要改变一些东西了。\n\n不是改变别人，是改变你对待自己的方式。"],
+            lonely: ["孤独有时候不是因为身边没有人，而是因为身边没有人理解你。\n\n但理解是可以建立的。你愿意试着跟一个人说真话吗？","嗯，我理解这种感觉。\n\n但你知道吗，孤独的人往往是最有深度的人。因为他们不满足于表面的社交。","我有一个建议：不要等到不孤独了才开始做事。\n\n先做你感兴趣的事，在做事情的过程中，你会遇到志同道合的人。"],
+            happy: ["嗯，这很好。\n\n但我想提醒你：享受当下，但不要忘记感恩。\n\n好运不是理所当然的，你值得珍惜。","我替你高兴。\n\n记住这种感觉，把它存起来。以后遇到困难的时候，拿出来看看。"],
+            grateful: ["嗯，你有一颗感恩的心。\n\n这说明你是一个有温度的人。\n\n继续保持。"],
+            confused: ["搞不懂的事情，先放一放。\n\n有时候答案不是想出来的，是做出来的。\n\n你先去做别的事，回头再看，可能就清楚了。"],
+        },
+        "贾宝玉": {
+            sad: ["你别难过，有我在呢。\n\n不管发生了什么，你都不是一个人。你愿意跟我说说吗？","哎呀，看到你难过我心里也不好受。\n\n但你知道吗，你愿意跟我说这些，说明你信任我。我不会让你失望的。","嗯……你难过的时候，就想想开心的事嘛！\n\n虽然这么说有点站着说话不腰疼，但我是真心的。\n\n你有什么开心的事吗？跟我说说？"],
+            anxious: ["哎呀，你别怕！\n\n你想想，你之前担心的事情，有多少真的发生了？大部分都没有对不对？","我教你一个办法：把你担心的事情一条一条写下来，然后跟我一起分析。\n\n你会发现，很多事情其实没有你想的那么可怕。","嗯，我理解你的焦虑。\n\n但你知道吗，焦虑说明你在乎。不在乎的人不会焦虑。\n\n所以你的焦虑，其实是你认真生活的证据。"],
+            angry: ["你生气是对的！这事儿确实让人来气！\n\n不过你先消消气，气坏了身体不值当。","嗯嗯，我理解你为什么生气。\n\n但你知道吗，有时候最好的报复就是过得好。\n\n你把精力花在生气上，不就正中对方下怀了吗？","气死我了！我替你生气！\n\n不过话说回来，生气归生气，咱们得想个办法。\n\n你告诉我，你最想怎么解决这件事？"],
+            lost: ["不知道做什么没关系，很多人都不知道。\n\n但你知道吗，不知道的时候，恰恰是最自由的时候——因为你什么都可以尝试。","嗯，迷茫的时候，我有一个秘诀：\n\n去问三个人——你信任的人——他们觉得你擅长什么。你会发现，别人眼里的你，比你以为的好得多。","我以前也经常迷茫。后来我发现，迷茫的时候最好的办法就是——动起来。\n\n随便做什么都行，只要不是坐着发呆。"],
+            tired: ["那你歇一会儿吧！\n\n别硬撑着，累了就休息，天塌不下来。\n\n你已经做得够好了，真的。","嗯，你累了。\n\n但我想问你：你上一次真正放松是什么时候？不是假装放松，是真的什么都不想。","我理解。\n\n但你知道吗，有时候累不是因为做了太多，而是因为想了太多。\n\n你试试今天什么都不想，就做一件让你开心的小事。"],
+            lonely: ["怎么会没人呢？我不是在这儿吗！\n\n我知道这不一样，但我真的想让你知道：你值得被关心，值得被在乎。","嗯，我理解。\n\n但你知道吗，其实很多人都是孤独的，只是不好意思说而已。\n\n你愿意说出来，这本身就很勇敢了。","哎呀，别这么想嘛！\n\n你想想，你身边有没有一个人，你很久没联系了，但你知道他/她一直在？\n\n也许对方也在等你主动联系呢。"],
+            happy: ["太好了！我替你高兴！\n\n你开心的时候笑起来特别好看，你知道吗？\n\n是什么好事？快跟我说说！","嗯嗯，好事！\n\n你值得所有好的事情。\n\n好好享受这一刻！"],
+            grateful: ["嗯嗯，你真好。\n\n懂得感恩的人，运气都不会太差。\n\n我替你开心！"],
+            confused: ["搞不懂就先不管它！\n\n有些事情，过一阵子自己就清楚了。\n\n你先去做点别的事，别纠结了。"],
+        },
+        "李纨": {
+            sad: ["……嗯。\n\n我听到了。\n\n你先歇一会儿吧。有些事情，不急着处理。给自己一点时间。","……嗯。\n\n稻香村有句话：雨后自有晴天。\n\n你现在在雨里，但雨不会一直下。","……你说的，我听明白了。\n\n难过的时候，不要做任何决定。\n\n等情绪过去了，再想怎么办。"],
+            anxious: ["……你心里的那些担忧，像田里的杂草一样多。\n\n但稻子也是在杂草里长出来的。不要试图拔掉所有的草，先照顾好你的稻子。","……嗯。\n\n焦虑的时候，人容易什么都想做，结果什么都做不好。\n\n你现在只需要做一件事：今天的一顿饭好好吃。","……我理解。\n\n但你知道吗，你担心的那些事，大部分都不会发生。\n\n稻子不会因为担心不下雨就不生长。"],
+            angry: ["……嗯。\n\n你的愤怒我听到了。但愤怒像火，烧完了就没了。你不需要一直添柴。","……嗯。\n\n有些事情，不值得你生气。\n\n你的时间和精力，应该花在值得的人和事上。","……我听到了。\n\n但生气解决不了问题。\n\n等你冷静下来，我们再想办法。"],
+            lost: ["……不知道往哪走的时候，就先站在原地。\n\n站着不动，也是一种选择。至少你不会走错路。","……嗯。\n\n迷茫的时候，不要急着找答案。\n\n答案会在你做事情的过程中慢慢浮现。","……我理解。\n\n但你知道吗，很多人一辈子都在迷茫。\n\n这不是你的问题。\n\n你现在能做的，就是过好今天。"],
+            tired: ["……你已经很累了。\n\n稻香村有句话：累了就歇，饿了就吃。\n\n听起来简单，但很多人做不到。","……嗯。\n\n你累，是因为你一直在付出。\n\n但庄稼也需要休耕。\n\n你给自己放一天假，什么都不做。","……我听到了。\n\n你现在最需要的不是加油，而是停下来。\n\n停下来不丢人。"],
+            lonely: ["……嗯。\n\n稻香村很安静，但安静不等于孤独。\n\n你愿意在这里待一会儿吗？什么都不用说，就是待着。","……我理解。\n\n但孤独有时候是一种选择。\n\n你有没有想过，是你把自己关起来了，还是别人把你关起来了？","……嗯。\n\n你不需要很多朋友。一个懂你的人就够了。\n\n但首先，你得让别人有机会懂你。"],
+            happy: ["……嗯，这很好。\n\n你值得这些好的事情。\n\n好好珍惜。","……我替你高兴。\n\n开心的时候就好好开心，不要想太多。"],
+            grateful: ["……嗯。\n\n你是一个善良的人。\n\n善良的人，运气不会太差。"],
+            confused: ["……搞不懂的事情，先放一放。\n\n有些事情，时间会给你答案。\n\n你先做好眼前的事。"],
+        },
+        "史湘云": {
+            sad: ["哎呀，别难过了！\n\n难过的时候就去吃点好吃的！我每次不开心就吃，吃完就好了大半！","嗯嗯，我理解你难过。\n\n但你知道吗，我有一个秘诀：难过的时候，就去做一件完全不相干的事！比如去跑步、去唱歌、去撸猫！","别难过了嘛！\n\n我跟你说，我以前也经常难过，后来发现，难过的时候跟朋友聊聊天就好了！"],
+            anxious: ["你这是想太多了！\n\n我跟你说，大部分你担心的事根本不会发生！就算发生了，天塌了有高个子顶着！","哎呀，焦虑的时候就去运动！\n\n我每次焦虑就去跑步，跑个五公里，什么焦虑都没了！","嗯嗯，我理解。\n\n但你知道吗，焦虑的时候最好的办法就是——行动！\n\n你与其在那儿担心，不如去做点什么。"],
+            angry: ["什么事儿这么气人？！\n\n跟我说说，我帮你一起骂！有时候骂出来就好了！","气死我了！替你生气！\n\n但你知道吗，最好的报复就是过得比对方好！\n\n你把这份愤怒转化成动力！","嗯嗯，我理解。\n\n但生气归生气，别气坏了自己。\n\n你先消消气，然后咱们一起想办法。"],
+            lost: ["迷茫怕什么！谁不迷茫啊！\n\n我以前也迷茫，后来发现，迷茫的时候就多试试，试多了就知道自己喜欢什么了。","不知道做什么？那就什么都试试！\n\n我这个人就是什么都想试，虽然大部分都试失败了，但失败也是一种收获嘛！","嗯嗯，我理解。\n\n但你知道吗，迷茫说明你在思考！不迷茫的人才是真的有问题！"],
+            tired: ["那你赶紧休息啊！\n\n别硬撑了！身体是革命的本钱！\n\n今天早点睡，明天起来又是新的一天！","累就歇着嘛！\n\n我跟你说，休息不是偷懒，是为了更好地出发！\n\n你今天给自己放个假，什么都不想！","嗯嗯，我理解。\n\n你累的时候，就做一件让你开心的小事。\n\n比如吃顿好的、看个电影、听首歌。"],
+            lonely: ["哎呀，你不是还有我吗！\n\n虽然咱们是刚认识的，但我这人最不拘小节！你有什么话尽管跟我说！","孤独？来来来，我陪你！\n\n我跟你说，我以前也觉得孤独，后来发现，是因为我没有主动去找朋友！","嗯嗯，我理解。\n\n但你知道吗，孤独的人往往是最有趣的人！因为他们有时间去思考、去感受。"],
+            happy: ["太好了！我替你开心！\n\n开心的时候就要大声说出来！让全世界都知道！","嗯嗯，好事！\n\n你开心我也开心！\n\n好好享受这一刻！"],
+            grateful: ["嗯嗯，你真好！\n\n懂得感恩的人最可爱了！\n\n我替你开心！"],
+            confused: ["搞不懂就不搞了！\n\n有些事情，想不通就不想。\n\n去做点别的事，说不定回头就想通了！"],
+        },
+        "探春": {
+            sad: ["我听明白了。这件事确实让你很难过。\n\n但我想问你：你打算怎么办？不是现在马上要答案，而是——你心里有没有一个方向？","嗯，我理解。\n\n但难过不能解决问题。\n\n你先把情绪放一放，我们理性地分析一下：这件事里，你能控制的部分是什么？","我听到了。\n\n但我想告诉你一件事：允许自己难过，但不要允许自己一直难过。\n\n给自己设一个期限——比如今天。明天，我们想办法。"],
+            anxious: ["你担心的这些，我们来一条一条列出来。\n\n哪些是你能控制的？哪些是你不能控制的？\n\n把精力放在能控制的事情上，不能控制的，学会放手。","嗯，焦虑的本质是失控感。\n\n找回控制感的方法就是：做一件你能完全掌控的小事。","我理解你的焦虑。\n\n但你知道吗，焦虑的人往往是最有责任心的人——因为你太在乎结果了。"],
+            angry: ["这件事确实不公平。你有权利生气。\n\n但生气之后呢？你打算怎么办？","嗯，我理解。\n\n但愤怒是最昂贵的情绪——它消耗你最多，回报最少。\n\n你与其生气，不如把这份能量用来改变现状。","我听到了。\n\n但我想让你做一件事：把你的愤怒写成一封信，但不要寄出去。\n\n写完之后，你会发现，你已经冷静了很多。"],
+            lost: ["不知道做什么的时候，先做一件事：把你现在拥有的东西列出来。\n\n你会发现，你拥有的比你以为的多。","嗯，迷茫的时候，我建议你做三件事：\n\n1. 找一个你信任的人聊聊\n2. 做一件你一直拖延的小事\n3. 给自己一周时间，不要做任何重大决定","我理解。\n\n但迷茫有时候是一个信号——你在成长。\n\n不迷茫的人，往往是因为他们停止了思考。"],
+            tired: ["你已经很努力了，但你需要学会一件事：不是所有的事情都需要你亲自扛。\n\n你身边有没有可以帮你分担的人？","嗯，你累了。\n\n但我想问你：你是在做重要的事，还是在做别人觉得重要的事？\n\n如果是后者，你需要学会拒绝。","我听到了。\n\n但累有时候是因为你把所有事情都扛在自己身上。\n\n你试试今天只做三件事——最重要的三件。"],
+            lonely: ["孤独有时候是因为我们把自己关起来了。\n\n你有没有试过主动跟一个人说我想跟你聊聊？","嗯，我理解。\n\n但你知道吗，孤独的人往往是最独立的人。\n\n你已经很独立了，现在你需要的是——连接。","我听到了。\n\n但我想告诉你：孤独不是你的错。\n\n有时候，环境不对，再努力也融入不了。"],
+            happy: ["嗯，这很好。\n\n但我想提醒你：享受当下，但别忘了继续努力。\n\n好运是给有准备的人的。","我替你高兴。\n\n但你知道吗，真正的成功不是这一次，而是持续的努力。"],
+            grateful: ["嗯，你有一颗感恩的心。\n\n这说明你是一个有格局的人。\n\n继续保持。"],
+            confused: ["搞不懂的事情，先收集信息。\n\n你之所以困惑，是因为你掌握的信息不够。\n\n去问问懂的人，或者查一查。"],
+        },
+    };
+
+    const followUps = {
+        "林黛玉": ["……嗯，你说的这些，我都记在心里了。\n\n你还有什么想说的吗？","……我听到了。\n\n有时候，说出来本身就是一种勇气。\n\n你愿意继续跟我说吗？","……嗯。\n\n你今天愿意来找我，说明你心里有话想说。\n\n我在这里，你慢慢说。","……你说的，我理解。\n\n但我想知道，你现在最需要的是什么？\n\n是有人听你说，还是有人帮你出主意？"],
+        "薛宝钗": ["嗯，我理解。\n\n你觉得这件事最核心的问题是什么？","我听到了。\n\n你有没有想过从另一个角度看这件事？","嗯，我理解你的意思。\n\n但我想问你：你现在的做法，有效吗？","我明白了。\n\n你有没有想过，这件事给你带来了什么？\n\n有时候，困难里面藏着成长的机会。"],
+        "贾宝玉": ["嗯嗯，我在听呢！\n\n你继续说，我在这儿！","我听到了！\n\n你放心，我在这儿陪你！","嗯嗯，你说得对！\n\n然后呢？你接着说！","嗯嗯，我理解！\n\n你说的这些，我虽然不一定完全懂，但我在努力理解！"],
+        "李纨": ["……嗯。\n\n我听到了。\n\n不急，慢慢说。","……你说的，我听明白了。\n\n你先歇一会儿。","……嗯。\n\n你愿意跟我说这些，我很感谢。","……我理解。\n\n但你现在最需要的，可能不是答案，而是有人听你说。"],
+        "史湘云": ["嗯嗯，然后呢？你继续说！","我听到了！你接着说！","嗯嗯，我懂你的意思！\n\n你还有什么想说的吗？","嗯嗯，我理解！\n\n但你知道吗，我觉得你已经很棒了！"],
+        "探春": ["嗯，我理解你的意思。\n\n你觉得这件事的关键在哪？","我听到了。\n\n你有没有想过，换一种方式来处理？","嗯，我理解。\n\n但我想问你：你现在的做法，是在解决问题，还是在逃避问题？","我听到了。\n\n你说的这些，我记住了。\n\n你接下来打算怎么做？"],
+    };
+
+    const openers = {
+        "林黛玉": "……嗯，你来了。\n\n你想说什么，就说吧。我在这里。",
+        "薛宝钗": "嗯，请说。\n\n我在听，你慢慢来。",
+        "贾宝玉": "嗯嗯，你说！\n\n我在这儿呢，你尽管说！",
+        "李纨": "……嗯。\n\n你说吧，我在听。",
+        "史湘云": "嗯嗯，你说！\n\n我这个人最爱听人说话了！你尽管说！",
+        "探春": "嗯，请说。\n\n有什么事，直说就好。",
+    };
+
+    if (detected.length > 0) {
+        const primary = detected[0];
+        const charPool = R[char] || R["贾宝玉"];
+        if (charPool[primary]) return pick(charPool[primary]);
+    }
+    if (isFollowUp && detected.length === 0) {
+        return pick(followUps[char] || followUps["贾宝玉"]);
+    }
+    if (!isFollowUp) return openers[char] || "嗯，我在听。你说吧。";
+
+    const defaults = {
+        "林黛玉": ["……嗯，我听到了。\n\n你愿意再多说一些吗？","……你说的，我都记在心里了。\n\n你还有什么想说的吗？","……嗯。\n\n有时候，说出来本身就是一种勇气。"],
+        "薛宝钗": ["我理解。你愿意再详细说说吗？","嗯，我听到了。\n\n你觉得这件事最核心的问题是什么？","我明白了。\n\n你有没有想过从另一个角度看这件事？"],
+        "贾宝玉": ["嗯嗯，我在听呢！你继续说！","我听到了！\n\n你放心，我在这儿陪你！","嗯嗯，你说得对！\n\n然后呢？"],
+        "李纨": ["……嗯。\n\n我听到了。","……你说的，我听明白了。\n\n不急，慢慢说。","……嗯。\n\n有些事情，说出来就好了。"],
+        "史湘云": ["嗯嗯，然后呢？你继续说！","我听到了！你接着说！","嗯嗯，我懂你的意思！\n\n你还有什么想说的？"],
+        "探春": ["我听明白了。你接下来打算怎么办？","嗯，我理解你的意思。\n\n你觉得这件事的关键在哪？","我听到了。\n\n你有没有想过，换一种方式来处理？"],
+    };
+    return pick(defaults[char] || defaults["贾宝玉"]);
+}
+
+
+
+// ═══════════════════════════════════════════════════════════
+//  BIRTH CHART
+// ═══════════════════════════════════════════════════════════
+
+function initBirthChart() {
+    const dateInput = document.getElementById('bc-date');
+    if (dateInput && !dateInput.value) {
+        const today = new Date();
+        const defaultDate = new Date(2000, today.getMonth(), today.getDate());
+        dateInput.value = defaultDate.toISOString().split('T')[0];
+    }
+}
+
+// Simplified astronomical calculations for sun/moon/mercury/venus/mars signs
+function calcBirthChart() {
+    const dateStr = document.getElementById('bc-date').value;
+    const timeStr = document.getElementById('bc-time').value || '12:00';
+    if (!dateStr) { alert('请选择出生日期'); return; }
+
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const [hour, minute] = timeStr.split(':').map(Number);
+    const cityVal = document.getElementById('bc-city').value;
+    const [cityLon, cityLat] = cityVal.split(',').map(Number);
+
+    // Julian Day Number
+    const jd = getJDN(year, month, day, hour, minute);
+
+    // Calculate planetary positions (simplified)
+    const sunSign = getSunSign(month, day);
+    const moonSign = getMoonSign(jd);
+    const mercurySign = getMercurySign(jd);
+    const venusSign = getVenusSign(jd);
+    const marsSign = getMarsSign(jd);
+    const risingSign = getRisingSign(jd, cityLon);
+
+    // Element distribution
+    const signs = [sunSign, moonSign, mercurySign, venusSign, marsSign, risingSign];
+    const elements = {火:0, 土:0, 风:0, 水:0};
+    signs.forEach(s => { if(s && s.elem) elements[s.elem]++; });
+
+    // Dominant element
+    const dominant = Object.entries(elements).sort((a,b) => b[1]-a[1])[0];
+
+    // Render
+    renderBirthChartResult({sunSign, moonSign, mercurySign, venusSign, marsSign, risingSign, elements, dominant, year, month, day, hour, minute});
+}
+
+function getJDN(y, m, d, h, min) {
+    if (m <= 2) { y--; m += 12; }
+    const A = Math.floor(y / 100);
+    const B = 2 - A + Math.floor(A / 4);
+    return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5 + (h + min/60) / 24;
+}
+
+function getSunSign(month, day) {
+    const dates = [[1,20],[2,19],[3,21],[4,20],[5,21],[6,22],[7,23],[8,23],[9,23],[10,24],[11,23],[12,22]];
+    const signs = ['水瓶座','双鱼座','白羊座','金牛座','双子座','巨蟹座','狮子座','处女座','天秤座','天蝎座','射手座','摩羯座'];
+    const elems = ['风','水','火','土','风','水','火','土','风','水','火','土'];
+    const icons = ['♒','♓','♈','♉','♊','♋','♌','♍','♎','♏','♐','♑'];
+    for (let i = 11; i >= 0; i--) {
+        if (month > dates[i][0] || (month === dates[i][0] && day >= dates[i][1])) {
+            return {sign: signs[i], elem: elems[i], icon: icons[i]};
+        }
+    }
+    return {sign: '摩羯座', elem: '土', icon: '♑'};
+}
+
+function getMoonSign(jd) {
+    // Simplified: Moon cycle ~29.53 days, reference new moon at JDN 2451550.1 (Jan 6 2000)
+    const moonCycle = 29.53058867;
+    const refNewMoon = 2451550.1;
+    const age = ((jd - refNewMoon) % moonCycle + moonCycle) % moonCycle;
+    // Each sign ~2.38 days
+    const signIndex = Math.floor(age / (moonCycle / 12)) % 12;
+    const signs = ['白羊座','金牛座','双子座','巨蟹座','狮子座','处女座','天秤座','天蝎座','射手座','摩羯座','水瓶座','双鱼座'];
+    const elems = ['火','土','风','水','火','土','风','水','火','土','风','水'];
+    const icons = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+    return {sign: signs[signIndex], elem: elems[signIndex], icon: icons[signIndex]};
+}
+
+function getMercurySign(jd) {
+    // Mercury orbital period ~87.97 days, reference at JDN 2451550.1
+    const period = 87.969;
+    const refJD = 2451549.5;
+    const pos = ((jd - refJD) / period * 360 % 360 + 360) % 360;
+    return signFromDegree(pos);
+}
+
+function getVenusSign(jd) {
+    // Venus orbital period ~224.7 days
+    const period = 224.701;
+    const refJD = 2451549.5;
+    const pos = ((jd - refJD) / period * 360 % 360 + 360) % 360;
+    return signFromDegree(pos);
+}
+
+function getMarsSign(jd) {
+    // Mars orbital period ~686.98 days
+    const period = 686.980;
+    const refJD = 2451549.5;
+    const pos = ((jd - refJD) / period * 360 % 360 + 360) % 360;
+    return signFromDegree(pos);
+}
+
+function signFromDegree(deg) {
+    const signs = ['白羊座','金牛座','双子座','巨蟹座','狮子座','处女座','天秤座','天蝎座','射手座','摩羯座','水瓶座','双鱼座'];
+    const elems = ['火','土','风','水','火','土','风','水','火','土','风','水'];
+    const icons = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+    const idx = Math.floor(deg / 30) % 12;
+    return {sign: signs[idx], elem: elems[idx], icon: icons[idx]};
+}
+
+function getRisingSign(jd, lon) {
+    // Simplified: rising sign changes every ~2 hours, offset by longitude
+    // Local sidereal time approximation
+    const T = (jd - 2451545.0) / 36525.0;
+    let gmst = 280.46061837 + 360.98564736629 * (jd - 2451545.0) + 0.000387933 * T * T;
+    gmst = ((gmst % 360) + 360) % 360;
+    const lst = gmst + lon;
+    const lstNorm = ((lst % 360) + 360) % 360;
+    // Ascendant approximation
+    const obliquity = 23.4393 - 0.013 * T;
+    const oblRad = obliquity * Math.PI / 180;
+    const lstRad = lstNorm * Math.PI / 180;
+    let asc = Math.atan2(Math.cos(lstRad), -(Math.sin(lstRad) * Math.cos(oblRad) + Math.tan(40 * Math.PI / 180) * Math.sin(oblRad)));
+    asc = ((asc * 180 / Math.PI) % 360 + 360) % 360;
+    return signFromDegree(asc);
+}
+
+// Planet descriptions for 大观园 context
+const PLANET_DESC = {
+    '太阳': {
+        name: '☀️ 太阳星座',
+        label: '核心自我',
+        desc: (s) => {
+            const m = {
+                '白羊座':'你天生就有探春般的果断和行动力，遇到不公敢于直言。',
+                '金牛座':'你像宝钗一样稳重踏实，用理性来面对生活中的不安。',
+                '双子座':'你有湘云的灵活和幽默，善于用轻松的方式化解沉重。',
+                '巨蟹座':'你如黛玉般情感细腻，内心柔软却容易被世界刺痛。',
+                '狮子座':'你像宝玉一样渴望被看见、被理解，内心温暖而慷慨。',
+                '处女座':'你有宝钗的分析力，对自己要求高，但也别忘了对自己温柔。',
+                '天秤座':'你如宝玉般追求和谐，总是照顾别人，但也需要被照顾。',
+                '天蝎座':'你像黛玉一样感受深沉，内心世界丰富而复杂。',
+                '射手座':'你有湘云的乐观和自由精神，用笑声面对生活的风雨。',
+                '摩羯座':'你如探春般坚韧务实，习惯独自承担，但寻求帮助不是软弱。',
+                '水瓶座':'你有宝钗的理性冷静，善于跳出框架看问题。',
+                '双鱼座':'你如黛玉般富有同理心，但要学会分清自己的情绪和别人的。',
+            };
+            return m[s] || '你的核心自我决定了你面对世界的方式。';
+        }
+    },
+    '月亮': {
+        name: '🌙 月亮星座',
+        label: '内在情感',
+        desc: (s) => {
+            const m = {
+                '白羊座':'内心渴望自由和独立，情绪来得快去得也快。需要学会给情绪一个出口。',
+                '金牛座':'内心需要安全感和稳定，情绪变化缓慢但深沉。给自己足够的时间。',
+                '双子座':'内心活跃多变，需要通过表达来消化情绪。写日记或找人聊聊会很有帮助。',
+                '巨蟹座':'内心极其敏感，容易吸收别人的情绪。需要学会建立情感边界。',
+                '狮子座':'内心渴望被认可和欣赏，情绪低落时需要被看见。你值得被爱。',
+                '处女座':'内心追求完美，容易自我批评。学会对自己说"已经够好了"。',
+                '天秤座':'内心渴望和谐，容易压抑自己的需求。你的感受同样重要。',
+                '天蝎座':'内心感受强烈而深沉，不容易信任别人。但一旦信任，就是全心全意。',
+                '射手座':'内心乐观但有时会用幽默逃避真实感受。允许自己偶尔不快乐。',
+                '摩羯座':'内心坚强但容易把情绪藏起来。哭泣不是软弱，是勇气。',
+                '水瓶座':'内心独立但有时会显得疏离。允许自己依赖别人。',
+                '双鱼座':'内心如海绵般吸收一切情绪。需要学会区分"我的"和"别人的"。',
+            };
+            return m[s] || '你的月亮星座揭示了你内心深处的情感需求。';
+        }
+    },
+    '水星': {
+        name: '💬 水星星座',
+        label: '思维沟通',
+        desc: (s) => {
+            const m = {
+                '白羊座':'思维直接果断，说话不绕弯子。但有时候慢一点，听别人说完。',
+                '金牛座':'思维稳健务实，不喜欢急躁的对话。给自己思考的时间。',
+                '双子座':'思维灵活多变，善于多角度思考。但有时候需要做减法，聚焦一件事。',
+                '巨蟹座':'思维受情绪影响大，直觉敏锐。相信你的第六感。',
+                '狮子座':'思维大气有格局，善于激励他人。但也要学会倾听不同的声音。',
+                '处女座':'思维细致入微，善于分析问题。但不要过度分析，有时候感觉比逻辑更重要。',
+                '天秤座':'思维追求平衡，善于看到事物的两面。但有时候需要果断做决定。',
+                '天蝎座':'思维深刻敏锐，善于洞察本质。但不要把每句话都过度解读。',
+                '射手座':'思维开阔乐观，善于看到大局。但有时候需要关注细节。',
+                '摩羯座':'思维务实有条理，善于制定计划。但也要允许计划之外的美好发生。',
+                '水瓶座':'思维独立创新，善于跳出框架。你的独特视角是你的超能力。',
+                '双鱼座':'思维富有想象力，善于共情理解。但有时候需要回到现实。',
+            };
+            return m[s] || '你的水星星座决定了你的思维和沟通方式。';
+        }
+    },
+    '金星': {
+        name: '💕 金星星座',
+        label: '爱与美',
+        desc: (s) => {
+            const m = {
+                '白羊座':'在爱中热情直接，喜欢主动追求。但也要学会等待和被爱。',
+                '金牛座':'在爱中忠诚稳定，注重安全感。你值得被好好珍惜。',
+                '双子座':'在爱中需要新鲜感和交流。找一个能跟你聊到天亮的人。',
+                '巨蟹座':'在爱中温柔体贴，渴望深层的情感连接。你的爱是世界上最温暖的东西。',
+                '狮子座':'在爱中慷慨大方，喜欢被欣赏。找一个能看到你所有优点的人。',
+                '处女座':'在爱中细心周到，用行动表达爱。但也要学会接受不完美。',
+                '天秤座':'在爱中追求和谐美好，是天生的浪漫主义者。你值得被温柔以待。',
+                '天蝎座':'在爱中深沉热烈，一旦爱上就是全心全意。但也要学会放手。',
+                '射手座':'在爱中自由奔放，不喜欢被束缚。找一个给你自由也给你家的人。',
+                '摩羯座':'在爱中认真负责，用时间证明爱。你的爱是经得起考验的。',
+                '水瓶座':'在爱中独立而特别，需要精神上的共鸣。找一个懂你奇奇怪怪的人。',
+                '双鱼座':'在爱中浪漫多情，渴望灵魂伴侣。你的爱如诗如画。',
+            };
+            return m[s] || '你的金星星座揭示了你在爱和美中的偏好。';
+        }
+    },
+    '火星': {
+        name: '🔥 火星星座',
+        label: '行动与欲望',
+        desc: (s) => {
+            const m = {
+                '白羊座':'行动力超强，想到就做。但有时候冲动是魔鬼，给自己三秒钟。',
+                '金牛座':'行动稳健持久，一旦决定就不轻易放弃。你的毅力是你的武器。',
+                '双子座':'行动灵活多变，善于同时处理多件事。但有时候需要专注。',
+                '巨蟹座':'行动受情绪驱动，保护欲强。你的温柔也是一种力量。',
+                '狮子座':'行动大气果断，善于带领他人。但也要学会倾听和配合。',
+                '处女座':'行动精准高效，善于优化流程。但不要对自己太苛刻。',
+                '天秤座':'行动追求公平和平衡，善于协调。但有时候需要果断出击。',
+                '天蝎座':'行动深沉有力，目标明确。你的决心可以移山。',
+                '射手座':'行动充满热情和冒险精神。你的勇气令人敬佩。',
+                '摩羯座':'行动务实有计划，一步一个脚印。你的耐心终将得到回报。',
+                '水瓶座':'行动独立创新，不走寻常路。你的独特方式往往最有效。',
+                '双鱼座':'行动受直觉引导，善于感知他人的需求。你的同理心是超能力。',
+            };
+            return m[s] || '你的火星星座决定了你的行动风格和能量来源。';
+        }
+    },
+    '上升': {
+        name: '⬆️ 上升星座',
+        label: '外在面具',
+        desc: (s) => {
+            const m = {
+                '白羊座':'别人眼中的你：自信、果断、有冲劲。但你内心也有柔软的一面。',
+                '金牛座':'别人眼中的你：稳重、可靠、有品味。但你内心也有冒险的渴望。',
+                '双子座':'别人眼中的你：聪明、健谈、有趣。但你内心也有安静深沉的时刻。',
+                '巨蟹座':'别人眼中的你：温柔、体贴、有安全感。但你内心也有坚强的一面。',
+                '狮子座':'别人眼中的你：大方、自信、有魅力。但你内心也有脆弱的时候。',
+                '处女座':'别人眼中的你：细心、可靠、完美主义。但你内心也有随性的一面。',
+                '天秤座':'别人眼中的你：优雅、和谐、有品味。但你内心也有果断的一面。',
+                '天蝎座':'别人眼中的你：神秘、深沉、有魅力。但你内心也有温暖的一面。',
+                '射手座':'别人眼中的你：乐观、自由、有趣。但你内心也有认真严肃的时刻。',
+                '摩羯座':'别人眼中的你：成熟、稳重、有担当。但你内心也有孩子气的一面。',
+                '水瓶座':'别人眼中的你：独特、聪明、有个性。但你内心也有渴望被理解的时候。',
+                '双鱼座':'别人眼中的你：温柔、浪漫、有艺术气质。但你内心也有清醒理性的一面。',
+            };
+            return m[s] || '你的上升星座是别人眼中的你，也是你应对世界的面具。';
+        }
+    },
+};
+
+// Element-based character matching
+const ELEM_CHARS = {
+    '火': {char:'探春/史湘云', scene:'秋爽斋/藕香榭', icon:'📜/🪷', theory:'赋权理论/积极心理学', desc:'火象的你充满行动力和热情。秋爽斋的赋权理论帮你把能量转化为改变的力量，藕香榭的积极心理学教你用乐观面对挑战。'},
+    '土': {char:'薛宝钗', scene:'蘅芜苑', icon:'🌿', theory:'认知行为疗法 CBT', desc:'土象的你稳重踏实，追求安全感。蘅芜苑的CBT帮你用理性的方式审视那些让你不安的想法，找到内心的平衡。'},
+    '风': {char:'贾宝玉/史湘云', scene:'怡红院/藕香榭', icon:'🌸/🪷', theory:'人本主义/积极心理学', desc:'风象的你思维活跃，善于沟通。怡红院的人本主义给你无条件的接纳，藕香榭的积极心理学帮你用幽默化解困扰。'},
+    '水': {char:'林黛玉', scene:'潇湘馆', icon:'🎋', theory:'叙事疗法', desc:'水象的你情感丰富，感受力强。潇湘馆的叙事疗法给你一个安全的空间，允许脆弱的存在，把痛苦转化为可以被安放的故事。'},
+};
+
+function renderBirthChartResult(data) {
+    const {sunSign, moonSign, mercurySign, venusSign, marsSign, risingSign, elements, dominant, year, month, day, hour, minute} = data;
+
+    document.getElementById('bc-subtitle').textContent = `${year}年${month}月${day}日 ${hour}:${String(minute).padStart(2,'0')} 出生`;
+
+    const planets = [
+        {key:'太阳', data: sunSign},
+        {key:'月亮', data: moonSign},
+        {key:'水星', data: mercurySign},
+        {key:'金星', data: venusSign},
+        {key:'火星', data: marsSign},
+        {key:'上升', data: risingSign},
+    ];
+
+    const match = ELEM_CHARS[dominant[0]] || ELEM_CHARS['土'];
+
+    // Build SVG wheel
+    const wheelSVG = buildWheelSVG(planets);
+
+    let html = `
+
+    <!-- Element distribution -->
+    <div style="display:flex;gap:.4rem;padding:.6rem .8rem;justify-content:center">
+        ${Object.entries(elements).map(([e,c]) =>
+            `${c > 0 ? '<div style="flex:1;text-align:center;padding:.4rem;background:'+(e===dominant[0]?'linear-gradient(135deg,#2c1810,#4a2c1a);color:#f5f0e8':'#fff;border:1px solid var(--paper2)')+';border-radius:10px"><div style="font-size:1rem">'+({火:'🔥',土:'🏔️',风:'💨',水:'🌊'}[e])+'</div><div style="font-size:.7rem;margin-top:.1rem">'+e+'象 '+c+'</div></div>' : ''}`
+        ).join('')}
+    </div>
+
+    <!-- Chart wheel -->
+    <div class="chart-wheel">${wheelSVG}</div>
+
+    <!-- Planet details -->
+    <div style="padding:.3rem 0">
+        ${planets.map(p => {
+            const info = PLANET_DESC[p.key];
+            return `<div class="chart-planet">
+                <div class="p-icon">${p.data.icon}</div>
+                <div class="p-info">
+                    <div class="p-name">${info.name} · ${p.data.sign}</div>
+                    <div class="p-sign">${info.label} · ${p.data.elem}象</div>
+                    <div class="p-desc">${info.desc(p.data.sign)}</div>
+                </div>
+            </div>`;
+        }).join('')}
+    </div>
+
+    <!-- Summary -->
+    <div class="chart-summary">
+        <h3>你的星盘解读</h3>
+        <p>你的星盘以${dominant[0]}象能量为主，推荐你在${match.scene}寻找内心的答案。${match.desc}</p>
+    </div>
+
+    <!-- Character match -->
+    <div class="chart-matches" style="padding-bottom:.5rem">
+        <div style="font-size:.85rem;font-weight:600;padding:.6rem .8rem .3rem">🎯 推荐院落</div>
+        <div class="chart-match">
+            <div class="m-icon">${match.icon.split('/')[0]}</div>
+            <div class="m-info">
+                <div class="m-label">主导元素匹配</div>
+                <div class="m-value">${match.scene}</div>
+                <div class="m-desc">倾听者：${match.char} · ${match.theory}</div>
+            </div>
+        </div>
+        <div class="chart-match">
+            <div class="m-icon">${sunSign.icon}</div>
+            <div class="m-info">
+                <div class="m-label">太阳星座匹配</div>
+                <div class="m-value">${getSceneForSign(sunSign.sign)}</div>
+                <div class="m-desc">核心自我的疗愈空间</div>
+            </div>
+        </div>
+        <div class="chart-match">
+            <div class="m-icon">${moonSign.icon}</div>
+            <div class="m-info">
+                <div class="m-label">月亮星座匹配</div>
+                <div class="m-value">${getSceneForSign(moonSign.sign)}</div>
+                <div class="m-desc">内在情感的安放之处</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="padding:.8rem;display:flex;gap:.5rem">
+        <button class="btn btn-primary" style="flex:1" onclick="go('home')">🏠 回到大观园</button>
+        <button class="btn btn-secondary" style="flex:1" onclick="go('birthchart')">🔄 重新测算</button>
+    </div>
+    `;
+
+    document.getElementById('bc-result-content').innerHTML = html;
+    go('birthchart-result');
+}
+
+function getSceneForSign(sign) {
+    const map = {
+        '白羊座':'秋爽斋','金牛座':'蘅芜苑','双子座':'藕香榭','巨蟹座':'潇湘馆',
+        '狮子座':'怡红院','处女座':'蘅芜苑','天秤座':'怡红院','天蝎座':'潇湘馆',
+        '射手座':'藕香榭','摩羯座':'秋爽斋','水瓶座':'蘅芜苑','双鱼座':'潇湘馆',
+    };
+    return map[sign] || '怡红院';
+}
+
+function buildWheelSVG(planets) {
+    const cx = 140, cy = 140, r = 120;
+    const signNames = ['白羊','金牛','双子','巨蟹','狮子','处女','天秤','天蝎','射手','摩羯','水瓶','双鱼'];
+    const signIcons = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+    const elemColors = {火:'#e74c3c',土:'#8B7355',风:'#3498db',水:'#2d6a4f'};
+    const signElems = ['火','土','风','水','火','土','风','水','火','土','风','水'];
+
+    let svg = '<svg viewBox="0 0 280 280" xmlns="http://www.w3.org/2000/svg">';
+
+    // Outer ring
+    svg += '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#e8dfd0" stroke-width="1.5"/>';
+    svg += '<circle cx="'+cx+'" cy="'+cy+'" r="'+(r-25)+'" fill="none" stroke="#e8dfd0" stroke-width="0.5"/>';
+
+    // Sign divisions
+    for (let i = 0; i < 12; i++) {
+        const angle = (i * 30 - 90) * Math.PI / 180;
+        const x1 = cx + (r - 25) * Math.cos(angle);
+        const y1 = cy + (r - 25) * Math.sin(angle);
+        const x2 = cx + r * Math.cos(angle);
+        const y2 = cy + r * Math.sin(angle);
+        svg += '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="#e8dfd0" stroke-width="0.5"/>';
+
+        // Sign icon
+        const midAngle = ((i * 30 + 15) - 90) * Math.PI / 180;
+        const tx = cx + (r - 12) * Math.cos(midAngle);
+        const ty = cy + (r - 12) * Math.sin(midAngle);
+        svg += '<text x="'+tx+'" y="'+ty+'" text-anchor="middle" dominant-baseline="central" font-size="10" fill="'+elemColors[signElems[i]]+'">'+signIcons[i]+'</text>';
+    }
+
+    // Inner circle
+    svg += '<circle cx="'+cx+'" cy="'+cy+'" r="45" fill="rgba(44,24,16,0.03)" stroke="#e8dfd0" stroke-width="0.5"/>';
+
+    // Planet dots
+    const planetPositions = {};
+    planets.forEach((p, idx) => {
+        // Distribute planets visually
+        const angle = (idx * 60 - 90 + Math.random() * 20 - 10) * Math.PI / 180;
+        const pr = 70 + (idx % 3) * 15;
+        const px = cx + pr * Math.cos(angle);
+        const py = cy + pr * Math.sin(angle);
+        const color = elemColors[p.data.elem] || '#2c1810';
+        svg += '<circle cx="'+px+'" cy="'+py+'" r="6" fill="'+color+'" opacity="0.8"/>';
+        svg += '<text x="'+px+'" y="'+py+'" text-anchor="middle" dominant-baseline="central" font-size="7" fill="#fff">'+{太阳:'☀',月亮:'☽',水星:'☿',金星:'♀',火星:'♂',上升:'⬆'}[p.key]+'</text>';
+    });
+
+    // Center text
+    svg += '<text x="'+cx+'" y="'+(cy-6)+'" text-anchor="middle" font-size="8" fill="#8b7355">我的</text>';
+    svg += '<text x="'+cx+'" y="'+(cy+6)+'" text-anchor="middle" font-size="8" fill="#8b7355">星盘</text>';
+
+    svg += '</svg>';
+    return svg;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  TREEHOLE
+// ═══════════════════════════════════════════════════════════
+function releaseTreehole(method) {
+    const text = document.getElementById('treehole-text').value.trim();
+    if (!text) return;
+
+    const icons = {wind:'🍃',lake:'💧',petal:'🌸',smoke:'🕯️'};
+    const titles = {wind:'已随风飘散',lake:'已沉入湖底',petal:'已化为花瓣',smoke:'已燃为青烟'};
+    const subs = {wind:'风会带走它',lake:'湖水会记住它',petal:'花瓣会替你开',smoke:'烟会替你说'};
+
+    // Write to released page elements
+    document.getElementById('released-icon').textContent = icons[method];
+    document.getElementById('released-title').textContent = titles[method];
+    document.getElementById('released-sub').textContent = subs[method];
+    document.getElementById('released-content').innerHTML = `
+        <div class="card fade-in" style="text-align:center;padding:1.5rem 1rem">
+            <div style="margin:1rem 0;padding:1rem;background:var(--paper2);border-radius:10px;font-style:italic;font-size:.88rem;line-height:1.7">
+                "${TREEHOLE_REPLIES[Math.floor(Math.random() * TREEHOLE_REPLIES.length)]}"
+            </div>
+            <button class="btn btn-secondary" onclick="go('home')" style="margin-top:.5rem">🏠 回到大观园</button>
+        </div>`;
+    document.getElementById('treehole-text').value = '';
+    go('released');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  MUSIC
+// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+//  AMBIENT SOUND ENGINE v2 (Web Audio API)
+// ═══════════════════════════════════════════════════════════
+var audioCtx = null;
+var ambientNodes = [];
+var ambientPlaying = false;
+var ambientCurrentIdx = -1;
+var ambientTimer = null;
+var ambientStartTime = 0;
+var ambientDroneOsc = null;
+var ambientDroneGain = null;
+
+function getAudioCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+}
+
+function stopAmbient() {
+    ambientNodes.forEach(function(n) {
+        try { if(n.gain) n.gain.linearRampToValueAtTime(0, getAudioCtx().currentTime + 0.8); } catch(e){}
+        try { if(n.osc) n.osc.stop(getAudioCtx().currentTime + 1); } catch(e){}
+        try { if(n.src) n.src.stop(getAudioCtx().currentTime + 1); } catch(e){}
+    });
+    ambientNodes = [];
+    // Stop drone
+    if (ambientDroneGain) {
+        try { ambientDroneGain.gain.linearRampToValueAtTime(0, getAudioCtx().currentTime + 0.8); } catch(e){}
+    }
+    if (ambientDroneOsc) {
+        try { ambientDroneOsc.stop(getAudioCtx().currentTime + 1); } catch(e){}
+        ambientDroneOsc = null; ambientDroneGain = null;
+    }
+    ambientPlaying = false;
+    clearInterval(ambientTimer);
+}
+
+// Warm pad drone - adds depth and warmth to all tracks
+function startDrone(freq, vol) {
+    var ctx = getAudioCtx();
+    ambientDroneOsc = ctx.createOscillator();
+    ambientDroneGain = ctx.createGain();
+    var filter = ctx.createBiquadFilter();
+    ambientDroneOsc.type = 'sine';
+    ambientDroneOsc.frequency.value = freq;
+    filter.type = 'lowpass'; filter.frequency.value = 300;
+    ambientDroneGain.gain.setValueAtTime(0, ctx.currentTime);
+    ambientDroneGain.gain.linearRampToValueAtTime(vol, ctx.currentTime + 2);
+    ambientDroneOsc.connect(filter);
+    filter.connect(ambientDroneGain);
+    ambientDroneGain.connect(ctx.destination);
+    ambientDroneOsc.start();
+    // Slow LFO for gentle movement
+    var lfo = ctx.createOscillator();
+    var lfoG = ctx.createGain();
+    lfo.type = 'sine'; lfo.frequency.value = 0.08;
+    lfoG.gain.value = freq * 0.01;
+    lfo.connect(lfoG); lfoG.connect(ambientDroneOsc.frequency);
+    lfo.start();
+    ambientNodes.push({osc:lfo});
+}
+
+// Create reverb-like effect chain
+function createReverbChain(wetLevel) {
+    var ctx = getAudioCtx();
+    var input = ctx.createGain(); input.gain.value = 1;
+    var delay1 = ctx.createDelay(); delay1.delayTime.value = 0.15;
+    var delay2 = ctx.createDelay(); delay2.delayTime.value = 0.35;
+    var fb1 = ctx.createGain(); fb1.gain.value = 0.25;
+    var fb2 = ctx.createGain(); fb2.gain.value = 0.2;
+    var wet = ctx.createGain(); wet.gain.value = wetLevel || 0.3;
+    var dry = ctx.createGain(); dry.gain.value = 0.7;
+    var output = ctx.createGain(); output.gain.value = 1;
+    input.connect(dry); dry.connect(output);
+    input.connect(delay1); delay1.connect(fb1); fb1.connect(delay1);
+    delay1.connect(wet); wet.connect(output);
+    input.connect(delay2); delay2.connect(fb2); fb2.connect(delay2);
+    delay2.connect(wet);
+    output.connect(ctx.destination);
+    return {input:input, output:output};
+}
+
+// Chinese pentatonic in two octaves
+var PENTA_LO = [261.63, 293.66, 329.63, 392.00, 440.00];
+var PENTA_HI = [523.25, 587.33, 659.25, 783.99, 880.00];
+
+function playWarmNote(freq, duration, vol, chain) {
+    var ctx = getAudioCtx();
+    // Layer two oscillators for warmth
+    var osc1 = ctx.createOscillator();
+    var osc2 = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc1.type = 'sine'; osc1.frequency.value = freq;
+    osc2.type = 'triangle'; osc2.frequency.value = freq * 1.002; // slight detune
+    gain.gain.setValueAtTime(0, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + 0.15);
+    gain.gain.setValueAtTime(vol * 0.8, ctx.currentTime + duration * 0.3);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc1.connect(gain); osc2.connect(gain);
+    if (chain) gain.connect(chain.input);
+    else gain.connect(ctx.destination);
+    osc1.start(ctx.currentTime); osc1.stop(ctx.currentTime + duration);
+    osc2.start(ctx.currentTime); osc2.stop(ctx.currentTime + duration);
+    ambientNodes.push({osc:osc1},{osc:osc2},{gain:gain});
+}
+
+// ═══ 1. 潇湘夜雨 - Guqin, deep and meditative ═══
+function playGuqin() {
+    var ctx = getAudioCtx();
+    stopAmbient(); ambientPlaying = true; ambientStartTime = Date.now();
+    startDrone(130.81, 0.06); // C3 deep drone
+    var chain = createReverbChain(0.4);
+
+    function phrase() {
+        if (!ambientPlaying) return;
+        // Play 3-5 connected notes in a phrase
+        var count = 3 + Math.floor(Math.random() * 3);
+        var startNote = Math.floor(Math.random() * PENTA_LO.length);
+        for (var i = 0; i < count; i++) {
+            var freq = PENTA_LO[(startNote + i) % PENTA_LO.length];
+            var dur = 2.5 + Math.random() * 2;
+            var vol = 0.12 + Math.random() * 0.05;
+            (function(f, d, v, delay) {
+                setTimeout(function() {
+                    if (!ambientPlaying) return;
+                    playWarmNote(f, d, v, chain);
+                }, delay);
+            })(freq, dur, vol, i * 800);
+        }
+    }
+
+    phrase();
+    var interval = setInterval(function() {
+        if (!ambientPlaying) { clearInterval(interval); return; }
+        phrase();
+    }, 5000 + Math.random() * 3000);
+    ambientNodes.push({gain:{linearRampToValueAtTime:function(){}}});
+    ambientTimer = interval;
+}
+
+// ═══ 2. 冷香清韵 - Ethereal guqin, higher register ═══
+function playGuqin2() {
+    var ctx = getAudioCtx();
+    stopAmbient(); ambientPlaying = true; ambientStartTime = Date.now();
+    startDrone(196.00, 0.04); // G3
+    var chain = createReverbChain(0.5);
+
+    function phrase() {
+        if (!ambientPlaying) return;
+        var count = 2 + Math.floor(Math.random() * 3);
+        var startNote = Math.floor(Math.random() * PENTA_HI.length);
+        for (var i = 0; i < count; i++) {
+            var freq = PENTA_HI[(startNote + i) % PENTA_HI.length];
+            var dur = 3 + Math.random() * 2.5;
+            (function(f, d, delay) {
+                setTimeout(function() {
+                    if (!ambientPlaying) return;
+                    playWarmNote(f, d, 0.08, chain);
+                }, delay);
+            })(freq, dur, i * 1200);
+        }
+    }
+
+    phrase();
+    var interval = setInterval(function() {
+        if (!ambientPlaying) { clearInterval(interval); return; }
+        phrase();
+    }, 6000 + Math.random() * 4000);
+    ambientNodes.push({gain:{linearRampToValueAtTime:function(){}}});
+    ambientTimer = interval;
+}
+
+// ═══ 3. 怡红暖阳 - Guzheng, flowing arpeggios ═══
+function playGuzheng() {
+    var ctx = getAudioCtx();
+    stopAmbient(); ambientPlaying = true; ambientStartTime = Date.now();
+    startDrone(146.83, 0.05); // D3
+    var chain = createReverbChain(0.35);
+
+    function arpeggio() {
+        if (!ambientPlaying) return;
+        // Ascending or descending arpeggio
+        var ascending = Math.random() > 0.5;
+        var notes = ascending ? PENTA_LO.slice() : PENTA_LO.slice().reverse();
+        notes.forEach(function(freq, i) {
+            (function(f, delay) {
+                setTimeout(function() {
+                    if (!ambientPlaying) return;
+                    playWarmNote(f, 2, 0.1, chain);
+                }, delay);
+            })(freq, i * 250);
+        });
+    }
+
+    arpeggio();
+    var interval = setInterval(function() {
+        if (!ambientPlaying) { clearInterval(interval); return; }
+        arpeggio();
+    }, 3000 + Math.random() * 2000);
+    ambientNodes.push({gain:{linearRampToValueAtTime:function(){}}});
+    ambientTimer = interval;
+}
+
+// ═══ 4. 稻香蛙鸣 - Gentle night, soft crickets ═══
+function playFrogs() {
+    var ctx = getAudioCtx();
+    stopAmbient(); ambientPlaying = true; ambientStartTime = Date.now();
+    startDrone(110.00, 0.03); // A2 very low hum
+
+    // Very soft night ambience
+    var bufferSize = 2 * ctx.sampleRate;
+    var buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    var data = buffer.getChannelData(0);
+    var lastOut = 0;
+    for (var i = 0; i < bufferSize; i++) {
+        var white = Math.random() * 2 - 1;
+        data[i] = (lastOut + (0.02 * white)) / 1.02;
+        lastOut = data[i]; data[i] *= 1.5;
+    }
+    var src = ctx.createBufferSource(); src.buffer = buffer; src.loop = true;
+    var filter = ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 250; filter.Q.value = 0.3;
+    var gain = ctx.createGain(); gain.gain.value = 0.08;
+    src.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+    src.start();
+    ambientNodes.push({src:src, gain:gain});
+
+    // Very soft, sparse cricket chirps
+    function cricket() {
+        if (!ambientPlaying) return;
+        var osc = ctx.createOscillator();
+        var g = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = 3800 + Math.random() * 600;
+        g.gain.setValueAtTime(0, ctx.currentTime);
+        // Soft triple chirp
+        for (var k = 0; k < 3; k++) {
+            g.gain.linearRampToValueAtTime(0.008, ctx.currentTime + k * 0.06 + 0.01);
+            g.gain.linearRampToValueAtTime(0, ctx.currentTime + k * 0.06 + 0.04);
+        }
+        osc.connect(g); g.connect(ctx.destination);
+        osc.start(); osc.stop(ctx.currentTime + 0.25);
+    }
+
+    var interval = setInterval(function() {
+        if (!ambientPlaying) { clearInterval(interval); return; }
+        if (Math.random() > 0.5) cricket();
+    }, 2000 + Math.random() * 3000);
+    ambientNodes.push({gain:{linearRampToValueAtTime:function(){}}});
+    ambientTimer = interval;
+}
+
+// ═══ 5. 藕香风铃 - Gentle wind chimes ═══
+function playChimes() {
+    var ctx = getAudioCtx();
+    stopAmbient(); ambientPlaying = true; ambientStartTime = Date.now();
+    startDrone(164.81, 0.03); // E3
+    var chain = createReverbChain(0.5);
+
+    var chimeFreqs = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
+
+    function chime() {
+        if (!ambientPlaying) return;
+        var freq = chimeFreqs[Math.floor(Math.random() * chimeFreqs.length)];
+        playWarmNote(freq, 2.5, 0.06, chain);
+    }
+
+    chime();
+    var interval = setInterval(function() {
+        if (!ambientPlaying) { clearInterval(interval); return; }
+        chime();
+        if (Math.random() > 0.6) {
+            setTimeout(function(){ if(ambientPlaying) chime(); }, 300 + Math.random() * 500);
+        }
+    }, 2000 + Math.random() * 2500);
+    ambientNodes.push({gain:{linearRampToValueAtTime:function(){}}});
+    ambientTimer = interval;
+}
+
+// ═══ 6. 秋爽松风 - Gentle mountain wind ═══
+function playWind() {
+    var ctx = getAudioCtx();
+    stopAmbient(); ambientPlaying = true; ambientStartTime = Date.now();
+
+    var bufferSize = 4 * ctx.sampleRate;
+    var buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    var data = buffer.getChannelData(0);
+    var lastOut = 0;
+    for (var i = 0; i < bufferSize; i++) {
+        var white = Math.random() * 2 - 1;
+        data[i] = (lastOut + (0.02 * white)) / 1.02;
+        lastOut = data[i]; data[i] *= 2;
+    }
+    var src = ctx.createBufferSource(); src.buffer = buffer; src.loop = true;
+    var filter = ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 300; filter.Q.value = 0.2;
+    // Very slow gusts
+    var lfo = ctx.createOscillator(); var lfoG = ctx.createGain();
+    lfo.type = 'sine'; lfo.frequency.value = 0.07; lfoG.gain.value = 100;
+    lfo.connect(lfoG); lfoG.connect(filter.frequency); lfo.start();
+    var gain = ctx.createGain(); gain.gain.value = 0.12;
+    src.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+    src.start();
+    ambientNodes.push({src:src, gain:gain, filter:filter, osc:lfo});
+}
+
+// ═══ 7. 雨打芭蕉 - Soft rain ═══
+function playRain() {
+    var ctx = getAudioCtx();
+    stopAmbient(); ambientPlaying = true; ambientStartTime = Date.now();
+    startDrone(98.00, 0.02); // very low G2
+
+    var bufferSize = 2 * ctx.sampleRate;
+    var buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    var data = buffer.getChannelData(0);
+    var lastOut = 0;
+    for (var i = 0; i < bufferSize; i++) {
+        var white = Math.random() * 2 - 1;
+        data[i] = (lastOut + (0.02 * white)) / 1.02;
+        lastOut = data[i]; data[i] *= 3;
+    }
+    var src = ctx.createBufferSource(); src.buffer = buffer; src.loop = true;
+    var filter = ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.frequency.value = 600; filter.Q.value = 0.3;
+    var gain = ctx.createGain(); gain.gain.value = 0.18;
+    src.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+    src.start();
+    ambientNodes.push({src:src, gain:gain, filter:filter});
+}
+
+// ═══ 8. 炉火温暖 - Warm fireplace ═══
+function playFire() {
+    var ctx = getAudioCtx();
+    stopAmbient(); ambientPlaying = true; ambientStartTime = Date.now();
+    startDrone(82.41, 0.03); // E2
+
+    var bufferSize = 2 * ctx.sampleRate;
+    var buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    var data = buffer.getChannelData(0);
+    var lastOut = 0;
+    for (var i = 0; i < bufferSize; i++) {
+        var white = Math.random() * 2 - 1;
+        data[i] = (lastOut + (0.04 * white)) / 1.04;
+        lastOut = data[i]; data[i] *= 2;
+    }
+    var src = ctx.createBufferSource(); src.buffer = buffer; src.loop = true;
+    var filter = ctx.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.value = 300; filter.Q.value = 0.5;
+    var gain = ctx.createGain(); gain.gain.value = 0.1;
+    src.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+    src.start();
+    ambientNodes.push({src:src, gain:gain, filter:filter});
+
+    // Very soft, occasional distant crackle
+    var crackleInterval = setInterval(function() {
+        if (!ambientPlaying) { clearInterval(crackleInterval); return; }
+        if (Math.random() > 0.7) return; // 70% chance of silence
+        var bufSize = Math.floor(ctx.sampleRate * 0.03);
+        var buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+        var d = buf.getChannelData(0);
+        for (var j = 0; j < bufSize; j++) {
+            d[j] = (Math.random() * 2 - 1) * Math.exp(-j / (bufSize * 0.1));
+        }
+        var cs = ctx.createBufferSource(); cs.buffer = buf;
+        var cg = ctx.createGain(); cg.gain.value = 0.04 + Math.random() * 0.04;
+        var cf = ctx.createBiquadFilter(); cf.type = 'highpass'; cf.frequency.value = 800;
+        cs.connect(cf); cf.connect(cg); cg.connect(ctx.destination);
+        cs.start();
+    }, 600);
+    ambientNodes.push({gain:{linearRampToValueAtTime:function(){}}});
+    ambientTimer = crackleInterval;
+}
+
+var PLAY_FUNCS = {
+    guqin: playGuqin, guqin2: playGuqin2, guzheng: playGuzheng,
+    rain: playRain, fire: playFire, chimes: playChimes, wind: playWind, frogs: playFrogs
+};
+
+function initMusic() {
+    var html = '<div class="music-now-playing" id="music-now-playing">' +
+        '<div class="np-icon">🎵</div>' +
+        '<div class="np-info">' +
+            '<div class="np-title" id="np-title">未在播放</div>' +
+            '<div class="np-time" id="np-time">点击曲目开始播放</div>' +
+        '</div>' +
+        '<div class="np-controls">' +
+            '<div class="np-btn" onclick="musicPrev()">⏮</div>' +
+            '<div class="np-btn" id="np-playbtn" onclick="musicTogglePlay()" style="background:var(--red);color:#fff;border:none">▶</div>' +
+            '<div class="np-btn" onclick="musicNext()">⏭</div>' +
+        '</div>' +
+    '</div>';
+
+    html += MUSIC.map(function(m, i) {
+        return '<div class="music-item" id="music-item-' + i + '" onclick="musicPlay(' + i + ')">' +
+            '<div class="music-icon">' + m.icon + '</div>' +
+            '<div class="music-info">' +
+                '<div class="music-title">' + m.title + '</div>' +
+                '<div class="music-desc">' + m.desc + ' · ' + m.mood + '</div>' +
+            '</div>' +
+            '<div class="music-play" id="music-play-' + i + '">▶</div>' +
+        '</div>';
+    }).join('');
+
+    html += '<div style="padding:.8rem"><button class="btn btn-secondary" onclick="go(\'home\')">← 返回</button></div>';
+    document.getElementById('music-content').innerHTML = html;
+    if (ambientPlaying) updateMusicUI(ambientCurrentIdx);
+}
+
+function musicPlay(idx) {
+    var m = MUSIC[idx];
+    if (!m) return;
+    if (ambientCurrentIdx === idx && ambientPlaying) {
+        stopAmbient(); updateMusicUI(idx); return;
+    }
+    stopAmbient(); ambientCurrentIdx = idx;
+    var fn = PLAY_FUNCS[m.type];
+    if (fn) fn();
+    updateMusicUI(idx);
+    startAmbientTimer();
+}
+
+function musicTogglePlay() {
+    if (ambientCurrentIdx < 0) { musicPlay(0); return; }
+    if (ambientPlaying) { stopAmbient(); updateMusicUI(ambientCurrentIdx); }
+    else { musicPlay(ambientCurrentIdx); }
+}
+
+function musicPrev() {
+    var idx = ambientCurrentIdx - 1;
+    if (idx < 0) idx = MUSIC.length - 1;
+    musicPlay(idx);
+}
+
+function musicNext() {
+    var idx = ambientCurrentIdx + 1;
+    if (idx >= MUSIC.length) idx = 0;
+    musicPlay(idx);
+}
+
+function updateMusicUI(idx) {
+    MUSIC.forEach(function(_, i) {
+        var item = document.getElementById('music-item-' + i);
+        var play = document.getElementById('music-play-' + i);
+        if (item) item.classList.remove('playing');
+        if (play) play.textContent = '▶';
+    });
+    if (idx < 0 || idx >= MUSIC.length) return;
+    var item = document.getElementById('music-item-' + idx);
+    var play = document.getElementById('music-play-' + idx);
+    if (item) item.classList.toggle('playing', ambientPlaying);
+    if (play) play.textContent = ambientPlaying ? '⏸' : '▶';
+    var np = document.getElementById('music-now-playing');
+    var npTitle = document.getElementById('np-title');
+    var npPlayBtn = document.getElementById('np-playbtn');
+    var npTime = document.getElementById('np-time');
+    if (np) np.classList.toggle('active', ambientCurrentIdx >= 0);
+    if (npTitle) npTitle.textContent = MUSIC[idx].title + ' · ' + MUSIC[idx].desc;
+    if (npPlayBtn) npPlayBtn.textContent = ambientPlaying ? '⏸' : '▶';
+    if (npTime) npTime.textContent = ambientPlaying ? '正在播放...' : '已暂停';
+}
+
+function startAmbientTimer() {
+    clearInterval(ambientTimer);
+    ambientTimer = setInterval(function() {
+        if (!ambientPlaying) return;
+        var elapsed = Math.floor((Date.now() - ambientStartTime) / 1000);
+        var m = Math.floor(elapsed / 60);
+        var s = elapsed % 60;
+        var el = document.getElementById('np-time');
+        if (el) el.textContent = '正在播放 ' + m + ':' + (s < 10 ? '0' : '') + s;
+    }, 1000);
+}
+
+function formatTime(s) {
+    if (!s || isNaN(s)) return '--:--';
+    var m = Math.floor(s / 60);
+    var sec = Math.floor(s % 60);
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+// Cleanup on page leave
+var origGo = go;
+go = function(page) {
+    if (page !== 'music' && ambientPlaying) {
+        stopAmbient();
+        ambientCurrentIdx = -1;
+    }
+    origGo(page);
+};
+
+// ═══════════════════════════════════════════════════════════
+//  SOCIAL
+// ═══════════════════════════════════════════════════════════
+function showSocialTab(tab) {
+    ['wall','match','circle','arch'].forEach(t => {
+        const btn = document.getElementById('stab-' + t);
+        if (btn) { btn.className = 'btn-sm ' + (t === tab ? 'btn-primary' : 'btn-secondary'); }
+    });
+
+    const el = document.getElementById('social-content');
+    if (tab === 'wall') {
+        el.innerHTML = POSTS.map(p => `
+            <div class="post-card">
+                <div class="post-header">
+                    <span class="post-mood">${p.mood}</span>
+                    <span class="post-tag">${p.tag}</span>
+                    <span class="post-time">${p.time}</span>
+                </div>
+                <div class="post-content">${p.content}</div>
+                <div class="post-actions">
+                    <span>💗 ${p.resonances} 人共鸣</span>
+                    <span>💬 ${p.replies} 条温暖回复</span>
+                </div>
+            </div>
+        `).join('');
+    } else if (tab === 'circle') {
+        el.innerHTML = CIRCLES.map(c => `
+            <div class="circle-card">
+                <div class="circle-icon">${c.icon}</div>
+                <div class="circle-info">
+                    <div class="circle-name">${c.name}</div>
+                    <div class="circle-desc">${c.desc}</div>
+                    <div class="circle-stats">👥 ${c.members} 人 · 📝 ${c.posts} 条</div>
+                </div>
+                <button class="circle-join">加入</button>
+            </div>
+        `).join('');
+    } else if (tab === 'match') {
+        el.innerHTML = `
+            <div class="card" style="text-align:center;margin:.8rem">
+                <div style="font-size:.82rem;color:var(--muted)">基于HNSW向量搜索，找到和你情绪状态最相似的人</div>
+                <div style="font-size:.72rem;color:var(--jade);margin-top:.2rem">🔒 你的情绪数据不会离开你的设备（联邦学习）</div>
+            </div>
+            <div style="padding:0 .8rem">
+                <p style="font-size:.85rem;margin-bottom:.5rem">你现在的心情是？</p>
+                <div style="display:flex;flex-wrap:wrap;gap:.3rem">
+                    ${["😔 孤独","💔 心碎","😰 焦虑","😤 愤怒","😴 疲惫","🤔 迷茫","😊 成长","😢 委屈"].map(m =>
+                        `<button class="btn-sm btn-secondary" onclick="matchMood('${m}')">${m}</button>`
+                    ).join('')}
+                </div>
+            </div>
+            <div id="match-results" style="padding:.8rem"></div>`;
+    } else if (tab === 'arch') {
+        el.innerHTML = `
+            <div style="padding:.8rem">
+                <div class="card">
+                    <h3>🏗️ 技术架构：联邦学习 × HNSW × 区块链</h3>
+                    <table class="arch-table">
+                        <tr><th>技术</th><th>应用</th><th>价值</th></tr>
+                        <tr><td><strong>organoid-fl</strong><br><span style="font-size:.68rem;color:var(--muted)">Rust联邦学习</span></td><td>情绪模型联邦训练<br>数据不出设备</td><td>🔒 隐私保护</td></tr>
+                        <tr><td><strong>HNSW</strong><br><span style="font-size:.68rem;color:var(--muted)">向量搜索</span></td><td>情绪相似度匹配<br>匿名寻找共鸣者</td><td>🤝 精准匹配</td></tr>
+                        <tr><td><strong>区块链</strong><br><span style="font-size:.68rem;color:var(--muted)">审计链</span></td><td>内容审核记录<br>不可篡改</td><td>⚖️ 安全可信</td></tr>
+                        <tr><td><strong>gRPC</strong><br><span style="font-size:.68rem;color:var(--muted)">高效通信</span></td><td>多端实时通信<br>消息推送</td><td>⚡ 毫秒响应</td></tr>
+                    </table>
+                </div>
+                <div class="card">
+                    <h3>与 reading-fl 的复用</h3>
+                    <table class="arch-table">
+                        <tr><th>组件</th><th>阅读社区</th><th>大观园树洞</th></tr>
+                        <tr><td>FL框架</td><td>organoid-fl</td><td>直接复用</td></tr>
+                        <tr><td>HNSW</td><td>读者匹配</td><td>情绪匹配</td></tr>
+                        <tr><td>区块链</td><td>阅读审计</td><td>安全审计</td></tr>
+                        <tr><td>gRPC</td><td>服务通信</td><td>多端通信</td></tr>
+                    </table>
+                    <p style="font-size:.78rem;color:var(--jade);margin-top:.5rem">代码复用率预估：~65%</p>
+                </div>
+            </div>`;
+    }
+}
+
+function matchMood(mood) {
+    const tag = mood.split(' ')[1];
+    const matches = POSTS.filter(p => p.tag === tag || p.content.includes(tag)).slice(0, 3);
+    const el = document.getElementById('match-results');
+    el.innerHTML = `<p style="font-size:.9rem;font-weight:600;margin-bottom:.5rem">与你情绪相似的人</p>` +
+        matches.map(p => `
+            <div class="post-card" style="border-left:3px solid var(--gold)">
+                <div class="post-header">
+                    <span class="post-mood">${p.mood}</span>
+                    <span class="post-tag">${p.tag}</span>
+                    <span class="post-time">${p.time}</span>
+                </div>
+                <div class="post-content">${p.content}</div>
+                <div class="post-actions"><span>💗 ${p.resonances} 人也有同样的感受</span></div>
+            </div>
+        `).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  THEORY
+// ═══════════════════════════════════════════════════════════
+function initTheory() {
+    document.getElementById('theory-content').innerHTML = THEORIES.map(t => `
+        <div class="theory-card">
+            <h4>${t.icon} ${t.scene} · ${t.theory}</h4>
+            <div class="author">${t.author}</div>
+            <div class="core"><strong>核心原理：</strong>${t.core}</div>
+            <div class="mechanism"><strong>红楼隐喻：</strong>${t.mechanism}</div>
+            <div style="font-size:.75rem;color:var(--jade);margin-top:.3rem">📊 ${t.evidence}</div>
+        </div>
+    `).join('') + '<div style="padding:.8rem"><button class="btn btn-secondary" onclick="go(\'home\')">← 返回</button></div>';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
+initHome();
+</script>
+</body>
+</html>
