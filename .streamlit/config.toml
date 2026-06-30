@@ -1,0 +1,14 @@
+[theme]
+base = "dark"
+primaryColor = "#d4a574"
+backgroundColor = "#0a0a0c"
+secondaryBackgroundColor = "#1a1410"
+textColor = "#e8e4dc"
+font = "serif"
+
+[client]
+# 隐藏 streamlit 自动生成的 sidebar nav (英文文件名)
+showSidebarNavigation = false
+
+[browser]
+gatherUsageStats = false
