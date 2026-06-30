@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>疗愈音乐 · 大观园</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&display=swap');
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Noto Serif SC', serif;
+      background: #0a0d0f;
+      color: #f5efe6;
+      min-height: 100vh;
+      margin: 0;
+    }
+    /* 宣纸纹理背景 */
+    .paper-texture {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(180,150,100,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 70%, rgba(160,120,80,0.05) 0%, transparent 50%);
+    }
+    /* 水墨晕染边框 */
+    .ink-border {
+      border-image: radial-gradient(ellipse at center, rgba(180,150,100,0.3) 0%, transparent 70%) 1;
+    }
+    /* 动态墨晕 */
+    .ink-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      pointer-events: none;
+      animation: ink-drift 12s ease-in-out infinite alternate;
+    }
+    @keyframes ink-drift {
+      0%   { transform: translate(0,0) scale(1); opacity: 0.12; }
+      50%  { transform: translate(30px,-20px) scale(1.1); opacity: 0.18; }
+      100% { transform: translate(-20px,15px) scale(0.95); opacity: 0.1; }
+    }
+    .btn-place {
+      transition: all 0.25s ease;
+      cursor: pointer;
+      user-select: none;
+      border: 1px solid rgba(180,150,100,0.15);
+      background: rgba(255,255,255,0.03);
+    }
+    .btn-place:hover {
+      background: rgba(180,150,100,0.1);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .btn-place.active {
+      background: rgba(180,150,100,0.18);
+      border-color: rgba(200,170,110,0.5);
+      box-shadow: 0 0 28px rgba(200,170,110,0.12), inset 0 0 20px rgba(200,170,110,0.05);
+    }
+    .freq-btn {
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .freq-btn.active {
+      background: rgba(200,160,100,0.2);
+      border-color: rgba(200,160,100,0.5);
+      color: #f0d8a0;
+    }
+    .wave-bar { display: flex; align-items: flex-end; gap: 3px; height: 44px; }
+    .wave-bar span {
+      width: 3px; border-radius: 2px;
+      background: linear-gradient(to top, #c8a870, #e8d4a8);
+      animation: wave-anim 1.4s ease-in-out infinite;
+      transform-origin: bottom;
+    }
+    @keyframes wave-anim {
+      0%,100% { height: 4px; }
+      50%      { height: 36px; }
+    }
+    .glass-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(180,150,100,0.12);
+      backdrop-filter: blur(16px);
+    }
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: rgba(180,150,100,0.5);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      height: 3px; border-radius: 2px;
+      background: rgba(180,150,100,0.2);
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #c8a870; cursor: pointer;
+    }
+    .pulse-ring {
+      position: absolute;
+      border: 1px solid rgba(200,170,110,0.25);
+      border-radius: 50%;
+      animation: pulse-r 2.5s ease-out infinite;
+    }
+    @keyframes pulse-r {
+      0%   { transform: translate(-50%,-50%) scale(1); opacity: 0.4; }
+      100% { transform: translate(-50%,-50%) scale(2.2); opacity: 0; }
+    }
+    @keyframes float-y {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-8px); }
+    }
+    .float-up { animation: float-y 5s ease-in-out infinite; }
+  </style>
+</head>
+<body class="flex flex-col items-center px-4 py-10 relative overflow-x-hidden">
+
+<div class="paper-texture"></div>
+
+<!-- 水墨晕染背景 -->
+<div class="ink-orb" style="width:400px;height:400px;background:radial-gradient(circle,#6b4a2a,#3a2510);top:5%;left:-10%;animation-delay:0s;"></div>
+<div class="ink-orb" style="width:280px;height:280px;background:radial-gradient(circle,#8b6a4a,#5a3a20);bottom:10%;right:-5%;animation-delay:6s;"></div>
+<div class="ink-orb" style="width:200px;height:200px;background:radial-gradient(circle,#4a3020,#2a1a0a);top:50%;left:60%;animation-delay:3s;"></div>
+
+<div class="relative z-10 w-full max-w-md flex flex-col gap-7">
+
+  <!-- 标题 -->
+  <div class="text-center float-up">
+    <div class="text-2xl font-light tracking-[0.3em] mb-1" style="color:#e8d4a8;">
+      大观园<span style="color:#c8a870;">·</span>疗愈
+    </div>
+    <p class="text-stone-600 text-xs tracking-widest">HEALING PULSE · 谱点</p>
+    <div class="flex justify-center mt-2">
+      <div style="width:60px;height:1px;background:linear-gradient(to right,transparent,rgba(200,170,110,0.4),transparent);"></div>
+    </div>
+  </div>
+
+  <!-- 场景选择（大观园地点）-->
+  <div class="glass-card rounded-2xl p-5">
+    <div class="section-label">选择场景</div>
+    <div class="grid grid-cols-2 gap-2" id="placeBtns">
+      <button class="btn-place active rounded-xl px-4 py-3 text-left" data-place="潇湘馆" data-prompt="潇湘馆，竹林，雨滴，黛玉葬花，惆怅，箫，古典，幽静">
+        <div class="text-sm" style="color:#b8d4a0;">潇湘馆</div>
+        <div class="text-xs text-stone-600 mt-0.5">竹雨潇潇 · 黛玉居所</div>
+      </button>
+      <button class="btn-place rounded-xl px-4 py-3 text-left" data-place="怡红院" data-prompt="怡红院，欢聚，宴会，宝玉，青春，丝竹，轻快，繁华">
+        <div class="text-sm" style="color:#f0c8c0;">怡红院</div>
+        <div class="text-xs text-stone-600 mt-0.5">富贵繁华 · 宝玉居所</div>
+      </button>
+      <button class="btn-place rounded-xl px-4 py-3 text-left" data-place="蘅芜苑" data-prompt="蘅芜苑，静谧，香草，宝钗，优雅，古琴，宁静，淡然">
+        <div class="text-sm" style="color:#d0c8f0;">蘅芜苑</div>
+        <div class="text-xs text-stone-600 mt-0.5">香草静室 · 宝钗居所</div>
+      </button>
+      <button class="btn-place rounded-xl px-4 py-3 text-left" data-place="稻香村" data-prompt="稻香村，田园，归隐，探春，朴素，牧歌，古筝，恬淡">
+        <div class="text-sm" style="color:#c8e0a0;">稻香村</div>
+        <div class="text-xs text-stone-600 mt-0.5">田园归隐 · 探春居所</div>
+      </button>
+      <button class="btn-place rounded-xl px-4 py-3 text-left" data-place="栊翠庵" data-prompt="栊翠庵，雪景，妙玉，茶道，孤高，笛，幽冷，空灵">
+        <div class="text-sm" style="color:#a8c8e0;">栊翠庵</div>
+        <div class="text-xs text-stone-600 mt-0.5">雪夜茶香 · 妙玉居所</div>
+      </button>
+      <button class="btn-place rounded-xl px-4 py-3 text-left" data-place="凹晶溪馆" data-prompt="凹晶溪馆，夜色，笛声，湘云，旷达，月色，水声，舒缓">
+        <div class="text-sm" style="color:#a0d8f0;">凹晶溪馆</div>
+        <div class="text-xs text-stone-600 mt-0.5">临水赏月 · 湘云居所</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- 情绪叠加 -->
+  <div class="glass-card rounded-2xl p-5">
+    <div class="section-label">叠加心境</div>
+    <div class="flex flex-wrap gap-2">
+      <button class="btn-mood px-4 py-2 rounded-full border border-stone-800 text-stone-500 text-xs transition-all hover:border-stone-600 active" data-mood="感伤" data-prompt="红楼梦感伤美，时光流逝，感慨，往事如烟">感伤</button>
+      <button class="btn-mood px-4 py-2 rounded-full border border-stone-800 text-stone-500 text-xs transition-all hover:border-stone-600" data-mood="宁静" data-prompt="内心平静，冥想，呼吸，缓慢，放松">宁静</button>
+      <button class="btn-mood px-4 py-2 rounded-full border border-stone-800 text-stone-500 text-xs transition-all hover:border-stone-600" data-mood="怅惘" data-prompt="惆怅，失落，思念，回忆，旧梦">怅惘</button>
+      <button class="btn-mood px-4 py-2 rounded-full border border-stone-800 text-stone-500 text-xs transition-all hover:border-stone-600" data-mood="温暖" data-prompt="温暖，慰藉，治愈，陪伴，柔和">温暖</button>
+    </div>
+  </div>
+
+  <!-- 频率调谐 -->
+  <div class="glass-card rounded-2xl p-5">
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <div class="section-label">频率调谐</div>
+        <div class="flex flex-col gap-2">
+          <button class="freq-btn active px-3 py-2 rounded-xl border border-stone-800 text-xs text-left" data-freq="432">432 Hz · 疗愈</button>
+          <button class="freq-btn px-3 py-2 rounded-xl border border-stone-800 text-xs text-left" data-freq="528">528 Hz · 奇迹</button>
+          <button class="freq-btn px-3 py-2 rounded-xl border border-stone-800 text-xs text-left" data-freq="396">396 Hz · 释压</button>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">播放时长</div>
+        <div class="flex flex-col gap-2">
+          <button class="freq-btn active px-3 py-2 rounded-xl border border-stone-800 text-xs text-left" data-dur="10">10 分钟</button>
+          <button class="freq-btn px-3 py-2 rounded-xl border border-stone-800 text-xs text-left" data-dur="20">20 分钟</button>
+          <button class="freq-btn px-3 py-2 rounded-xl border border-stone-800 text-xs text-left" data-dur="30">30 分钟</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 生成按钮 -->
+  <div id="genSection">
+    <button id="genBtn" onclick="generate()" class="w-full py-4 rounded-2xl font-light tracking-widest transition-all text-sm"
+      style="background:linear-gradient(135deg,rgba(60,40,20,0.8),rgba(40,25,10,0.9));border:1px solid rgba(200,170,110,0.3);color:#e8d4a8;">
+      谱一曲 · 大观园
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div id="loadingState" class="hidden flex flex-col items-center gap-4 py-6">
+    <div class="relative w-20 h-20 flex items-center justify-center">
+      <div class="pulse-ring" style="width:80px;height:80px;top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+      <div class="pulse-ring" style="width:80px;height:80px;top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:1.25s;"></div>
+      <div class="pulse-ring" style="width:80px;height:80px;top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:2.5s;"></div>
+      <svg class="w-7 h-7" style="color:#c8a870;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2"
+          d="M9 19V6l12-3v13M9 19c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2z"/>
+      </svg>
+    </div>
+    <div class="text-center">
+      <p style="color:#c8a870;" class="text-sm font-light tracking-wide" id="loadingText">正在谱曲…</p>
+      <p class="text-stone-700 text-xs mt-1">大观园的音乐正在生成</p>
+    </div>
+    <div class="wave-bar">
+      <span style="animation-delay:0s;"></span><span style="animation-delay:0.1s;"></span>
+      <span style="animation-delay:0.2s;"></span><span style="animation-delay:0.3s;"></span>
+      <span style="animation-delay:0.4s;"></span><span style="animation-delay:0.5s;"></span>
+      <span style="animation-delay:0.6s;"></span><span style="animation-delay:0.7s;"></span>
+      <span style="animation-delay:0.8s;"></span><span style="animation-delay:0.9s;"></span>
+      <span style="animation-delay:1.0s;"></span><span style="animation-delay:1.1s;"></span>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div id="errorState" class="hidden rounded-2xl px-5 py-4 text-sm" style="background:rgba(180,60,40,0.1);border:1px solid rgba(180,60,40,0.3);color:#f0a090;"></div>
+
+  <!-- Player -->
+  <div id="playerCard" class="hidden glass-card rounded-2xl p-6 flex flex-col gap-5">
+    <div class="flex items-center gap-4">
+      <button onclick="togglePlay()" id="playBtn" class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 transition-all"
+        style="background:linear-gradient(135deg,rgba(60,40,20,0.9),rgba(40,25,10,0.8));box-shadow:0 0 28px rgba(200,170,110,0.15);border:1px solid rgba(200,170,110,0.3);">
+        <svg id="playIcon" class="w-5 h-5 ml-1" style="color:#e8d4a8;" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      </button>
+      <div class="flex-1 min-w-0">
+        <p class="text-stone-300 text-sm font-light truncate" id="trackTitle">—</p>
+        <p class="text-stone-600 text-xs" id="trackMeta">—</p>
+      </div>
+      <button onclick="downloadTrack()" class="px-4 py-2 rounded-xl text-xs transition-colors"
+        style="border:1px solid rgba(180,150,100,0.2);color:rgba(180,150,100,0.6);">下载</button>
+    </div>
+    <!-- 进度条 -->
+    <div class="flex items-center gap-3">
+      <span class="text-stone-700 text-xs w-8" id="timeCurrent">0:00</span>
+      <input type="range" id="progressBar" value="0" max="100" class="flex-1" oninput="onSeek(this.value)">
+      <span class="text-stone-700 text-xs w-8 text-right" id="timeTotal">0:00</span>
+    </div>
+    <!-- 音量 -->
+    <div class="flex items-center gap-3">
+      <svg class="w-4 h-4 text-stone-700" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 8v8a4.5 4.5 0 002.5-3.9z"/></svg>
+      <input type="range" id="volumeBar" value="80" max="100" class="flex-1" oninput="onVolume(this.value)">
+    </div>
+    <audio id="audioEl" class="hidden" crossorigin="anonymous"></audio>
+  </div>
+
+  <!-- 注释 -->
+  <div class="text-center text-stone-700 text-xs leading-relaxed">
+    <p>「满纸荒唐言，一把辛酸泪」</p>
+    <p class="mt-1">佩戴耳机，开启大观园疗愈之旅</p>
+  </div>
+
+</div>
+
+<script>
+const MINIMAX_KEY = import.meta.env.VITE_MINIMAX_API_KEY || ''
+
+const state = {
+  place: '潇湘馆',
+  placePrompt: '潇湘馆，竹林，雨滴，黛玉葬花，惆怅，箫，古典，幽静',
+  mood: '感伤',
+  moodPrompt: '红楼梦感伤美，时光流逝，感慨，往事如烟',
+  freq: '432',
+  duration: '10',
+  audioUrl: null,
+  isPlaying: false,
+}
+
+// 地点按钮
+document.querySelectorAll('[data-place]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-place]').forEach(b => b.classList.remove('active'))
+    btn.classList.add('active')
+    state.place = btn.dataset.place
+    state.placePrompt = btn.dataset.prompt
+  })
+})
+
+// 情绪按钮
+document.querySelectorAll('.btn-mood').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.btn-mood').forEach(b => {
+      b.classList.remove('active')
+      b.style.borderColor = ''
+      b.style.color = ''
+    })
+    btn.classList.add('active')
+    btn.style.borderColor = 'rgba(200,170,110,0.5)'
+    btn.style.color = '#e8d4a8'
+    state.mood = btn.dataset.mood
+    state.moodPrompt = btn.dataset.prompt
+  })
+})
+
+// 频率
+document.querySelectorAll('[data-freq]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-freq]').forEach(b => b.classList.remove('active'))
+    btn.classList.add('active')
+    state.freq = btn.dataset.freq
+  })
+})
+
+// 时长
+document.querySelectorAll('[data-dur]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-dur]').forEach(b => b.classList.remove('active'))
+    btn.classList.add('active')
+    state.duration = btn.dataset.dur
+  })
+})
+
+// 音频事件
+const audio = document.getElementById('audioEl')
+audio.addEventListener('timeupdate', () => {
+  if (audio.duration) {
+    const pct = (audio.currentTime / audio.duration) * 100
+    document.getElementById('progressBar').value = pct
+    document.getElementById('timeCurrent').textContent = ftime(audio.currentTime)
+  }
+})
+audio.addEventListener('loadedmetadata', () => {
+  document.getElementById('timeTotal').textContent = ftime(audio.duration)
+})
+audio.addEventListener('ended', () => {
+  state.isPlaying = false
+  document.getElementById('playIcon').innerHTML = '<path d="M8 5v14l11-7z"/>'
+})
+
+function ftime(s) {
+  const m = Math.floor(s / 60)
+  const sc = Math.floor(s % 60)
+  return `${m}:${sc.toString().padStart(2,'0')}`
+}
+
+function togglePlay() {
+  if (!audio.src) return
+  if (state.isPlaying) { audio.pause(); state.isPlaying = false }
+  else { audio.play(); state.isPlaying = true }
+  document.getElementById('playIcon').innerHTML = state.isPlaying
+    ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'
+    : '<path d="M8 5v14l11-7z"/>'
+}
+
+function onSeek(val) {
+  if (!audio.duration) return
+  audio.currentTime = (val / 100) * audio.duration
+}
+function onVolume(val) { audio.volume = val / 100 }
+
+async function generate() {
+  if (!MINIMAX_KEY) {
+    showError('请先配置 VITE_MINIMAX_API_KEY')
+    return
+  }
+
+  document.getElementById('genSection').classList.add('hidden')
+  document.getElementById('errorState').classList.add('hidden')
+  document.getElementById('playerCard').classList.add('hidden')
+  document.getElementById('loadingState').classList.remove('hidden')
+
+  const prompt = `${state.placePrompt}，叠加${state.mood}情绪，${state.freq}Hz频率调谐，时长约${state.duration}分钟，缓慢渐弱结尾，专业古风疗愈音乐红楼梦氛围`
+
+  try {
+    const res = await fetch('https://api.minimax.chat/v1/text_to_music', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${MINIMAX_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ model: 'music-02', prompt, make_long: false }),
+    })
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.base_resp?.status_msg || '生成失败，请检查 API Key 是否有效')
+    }
+
+    const blob = await res.blob()
+    const url = URL.createObjectURL(blob)
+
+    audio.src = url
+    audio.volume = 0.8
+    state.audioUrl = url
+
+    document.getElementById('trackTitle').textContent = `${state.place} · ${state.mood}`
+    document.getElementById('trackMeta').textContent = `${state.freq} Hz · ${state.duration} 分钟`
+    document.getElementById('loadingState').classList.add('hidden')
+    document.getElementById('playerCard').classList.remove('hidden')
+
+    audio.play()
+    state.isPlaying = true
+    document.getElementById('playIcon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'
+
+  } catch (e) {
+    document.getElementById('loadingState').classList.add('hidden')
+    showError(e.message || '未知错误')
+    document.getElementById('genSection').classList.remove('hidden')
+  }
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorState')
+  el.textContent = msg
+  el.classList.remove('hidden')
+}
+
+function downloadTrack() {
+  if (!state.audioUrl) return
+  const a = document.createElement('a')
+  a.href = state.audioUrl
+  a.download = `大观园_${state.place}_${state.mood}.mp3`
+  a.click()
+}
+</script>
+</body>
+</html>
