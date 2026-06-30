@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>大观园树洞 - 一键部署</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#1a1a2e;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:#16213e;border-radius:16px;padding:3rem 2rem;max-width:480px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+h1{font-size:1.8rem;margin-bottom:.5rem}
+.emoji{font-size:3rem;margin-bottom:1rem}
+p{color:#8892b0;line-height:1.7;margin:1rem 0}
+.steps{text-align:left;margin:1.5rem 0;padding:1rem;background:#0f3460;border-radius:12px}
+.steps li{margin:.5rem 0;color:#ccd6f6;font-size:.9rem}
+.steps code{background:#1a1a2e;padding:.1rem .4rem;border-radius:4px;font-size:.85rem}
+.btn{display:inline-block;padding:.8rem 2rem;background:#e94560;color:#fff;border:none;border-radius:99px;font-size:1rem;text-decoration:none;margin:.5rem;cursor:pointer;transition:transform .2s}
+.btn:hover{transform:scale(1.05)}
+.btn-secondary{background:#0f3460}
+.badge{display:inline-block;padding:.2rem .6rem;background:rgba(233,69,96,.15);color:#e94560;border-radius:99px;font-size:.75rem;margin:.3rem}
+</style>
+</head>
+<body>
+<div class="card">
+    <div class="emoji">🌸</div>
+    <h1>大观园树洞</h1>
+    <p>红楼梦主题心理疗愈平台 · 移动端H5</p>
+    <div>
+        <span class="badge">MBTI测试</span>
+        <span class="badge">星座指引</span>
+        <span class="badge">AI对话</span>
+        <span class="badge">匿名社交</span>
+    </div>
+    <ol class="steps">
+        <li>点击下方按钮，Fork 到你的 GitHub</li>
+        <li>打开 Netlify → <code>New site from Git</code></li>
+        <li>选择你 Fork 的仓库，直接 Deploy</li>
+        <li>30秒后获得链接，微信直接打开</li>
+    </ol>
+    <a class="btn" href="https://github.com/new?template_name=dgy-treehole&template_owner=dechang64" target="_blank">
+        Fork 到 GitHub
+    </a>
+    <a class="btn btn-secondary" href="https://app.netlify.com/start" target="_blank">
+        部署到 Netlify
+    </a>
+    <p style="font-size:.75rem;margin-top:1rem;color:#4a5568">
+        零配置 · 零依赖 · 单HTML文件 · 21KB
+    </p>
+</div>
+</body>
+</html>
